@@ -1,9 +1,9 @@
-import { Redirect } from "expo-router";
-import { Text } from "react-native";
+import { Button } from "react-native";
+
+import { logout } from "@/api/auth";
 
 export default function HomeScreen() {
-  // TODO: remove later
-  return <Redirect href="/welcome" />;
+  const handleLogout = async () => await logout();
 
-  return <Text>Home Screen</Text>;
+  return <Button title="Logout" onPress={handleLogout} />;
 }

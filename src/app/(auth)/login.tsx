@@ -3,6 +3,8 @@ import { Link } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import Snackbar from "react-native-snackbar";
 
 import ScreenWrapper from "@/components/common/ScreenWrapper";
 import KeyboardAvoidingScrollView from "@/components/common/KeyboardAvoidingScrollView";
@@ -11,6 +13,8 @@ import Icon from "@/components/common/Icon";
 import Text from "@/components/ui/Text";
 import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
+
+import { login } from "@/api/auth";
 
 const schema = z.object({
   email: z
@@ -23,20 +27,30 @@ const schema = z.object({
   }),
 });
 
-type LoginForm = z.infer<typeof schema>;
+export type LoginForm = z.infer<typeof schema>;
 
 export default function LoginScreen() {
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: zodResolver(schema),
   });
 
-  const handleLogin = (data: LoginForm) => {
-    console.log(data);
-  };
+  const { mutate, isPending } = useMutation({
+    mutationFn: login,
+    onError: (error) => {
+      reset();
+      Snackbar.show({
+        text: error.message,
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    },
+  });
+
+  const handleLogin = (data: LoginForm) => mutate(data);
 
   return (
     <ScreenWrapper className="pb-4" edges={["top", "bottom"]}>
@@ -96,7 +110,11 @@ export default function LoginScreen() {
             </View>
 
             <View className="gap-4">
-              <Button text="Login" onPress={handleSubmit(handleLogin)} />
+              <Button
+                text="Login"
+                isLoading={isPending}
+                onPress={handleSubmit(handleLogin)}
+              />
 
               <View className="flex-row justify-center items-center gap-1">
                 <Text>Don't have an account?</Text>
