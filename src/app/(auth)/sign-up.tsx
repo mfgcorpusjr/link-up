@@ -1,5 +1,8 @@
 import { View } from "react-native";
 import { Link } from "expo-router";
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import ScreenWrapper from "@/components/common/ScreenWrapper";
 import KeyboardAvoidingScrollView from "@/components/common/KeyboardAvoidingScrollView";
@@ -9,7 +12,37 @@ import Text from "@/components/ui/Text";
 import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
 
+const schema = z.object({
+  name: z.string({
+    required_error: "Name is required",
+  }),
+  email: z
+    .string({
+      required_error: "Email is required",
+    })
+    .email("Invalid email format"),
+  password: z
+    .string({
+      required_error: "Password is required",
+    })
+    .min(6, "Password must be at least 6 characters long"),
+});
+
+type SignUpForm = z.infer<typeof schema>;
+
 export default function SignUpScreen() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+
+  const handleSignUp = (data: SignUpForm) => {
+    console.log(data);
+  };
+
   return (
     <ScreenWrapper className="pb-4" edges={["top", "bottom"]}>
       <KeyboardAvoidingScrollView>
@@ -21,31 +54,76 @@ export default function SignUpScreen() {
             <Text variant="title">Get Started</Text>
           </View>
 
-          <View className="gap-10">
-            <Text className="-mb-4">
+          <View className="gap-3">
+            <Text className="mb-3">
               Please fill the details to create an account
             </Text>
 
-            <TextInput
-              placeholder="Enter your name"
-              icon={<Icon name="person-outline" color="grey" />}
-            />
+            <View>
+              <Controller
+                control={control}
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <TextInput
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder="Enter your name"
+                    icon={<Icon name="person-outline" color="grey" />}
+                  />
+                )}
+                name="name"
+              />
 
-            <TextInput
-              placeholder="Enter your email"
-              icon={<Icon name="mail-outline" color="grey" />}
-              autoCapitalize="none"
-            />
+              <Text className="p-1" variant="error">
+                {errors?.name?.message}
+              </Text>
+            </View>
 
-            <TextInput
-              placeholder="Enter your password"
-              icon={<Icon name="lock-closed-outline" color="grey" />}
-              autoCapitalize="none"
-              secureTextEntry
-            />
+            <View>
+              <Controller
+                control={control}
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <TextInput
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder="Enter your email"
+                    icon={<Icon name="mail-outline" color="grey" />}
+                    autoCapitalize="none"
+                  />
+                )}
+                name="email"
+              />
+
+              <Text className="p-1" variant="error">
+                {errors?.email?.message}
+              </Text>
+            </View>
+
+            <View>
+              <Controller
+                control={control}
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <TextInput
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder="Enter your password"
+                    icon={<Icon name="lock-closed-outline" color="grey" />}
+                    autoCapitalize="none"
+                    secureTextEntry
+                  />
+                )}
+                name="password"
+              />
+
+              <Text className="p-1" variant="error">
+                {errors?.password?.message}
+              </Text>
+            </View>
 
             <View className="gap-4">
-              <Button text="Sign Up" />
+              <Button text="Sign Up" onPress={handleSubmit(handleSignUp)} />
 
               <View className="flex-row justify-center items-center gap-1">
                 <Text>Already have an account?</Text>
