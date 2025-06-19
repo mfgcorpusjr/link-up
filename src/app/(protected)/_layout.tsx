@@ -9,5 +9,5 @@ export default function ProtectedLayout() {
     return <Redirect href="/welcome" />;
   }
 
-  return <Stack />;
+  return <Stack screenOptions={{ headerShown: false }} />;
 }
