@@ -12,7 +12,7 @@ const queryClient = new QueryClient();
 export default function RootLayout() {
   const initAuth = useAuthStore((state) => state.initAuth);
 
-  useEffect(() => initAuth());
+  useEffect(() => initAuth(), []);
 
   return (
     <SafeAreaProvider>
