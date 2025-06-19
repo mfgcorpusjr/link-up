@@ -18,7 +18,7 @@ export default function HomeHeader() {
         <Icon name="heart-outline" size={32} />
         <Icon name="add-circle-outline" size={32} />
         <Link href="/profile" asChild>
-          <Avatar uri={profile?.avatar || null} />
+          <Avatar uri={profile?.avatar} />
         </Link>
       </View>
     </View>
