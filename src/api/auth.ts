@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase";
 
-import { SignUpForm } from "@/app/(auth)/sign-up";
+import { SignUpForm } from "@/hooks/useSignUpForm";
 import { LoginForm } from "@/app/(auth)/login";
 
 export const signUp = async (payload: SignUpForm) => {
