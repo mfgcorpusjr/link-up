@@ -1,10 +1,5 @@
 import { View } from "react-native";
 import { Link } from "expo-router";
-import { useForm, Controller } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import Snackbar from "react-native-snackbar";
 
 import ScreenWrapper from "@/components/common/ScreenWrapper";
 import KeyboardAvoidingScrollView from "@/components/common/KeyboardAvoidingScrollView";
@@ -14,43 +9,13 @@ import Text from "@/components/ui/Text";
 import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
 
-import { login } from "@/api/auth";
-
-const schema = z.object({
-  email: z
-    .string({
-      required_error: "Email is required",
-    })
-    .email("Invalid email format"),
-  password: z.string({
-    required_error: "Password is required",
-  }),
-});
-
-export type LoginForm = z.infer<typeof schema>;
+import useLoginForm, { LoginForm } from "@/hooks/useLoginForm";
 
 export default function LoginScreen() {
   const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
-    resolver: zodResolver(schema),
-  });
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: login,
-    onError: (error) => {
-      reset();
-      Snackbar.show({
-        text: error.message,
-        duration: Snackbar.LENGTH_SHORT,
-      });
-    },
-  });
-
-  const handleLogin = (data: LoginForm) => mutate(data);
+    form: { Controller, control, errors, handleSubmit },
+    query: { mutate, isPending },
+  } = useLoginForm();
 
   return (
     <ScreenWrapper className="pb-4" edges={["top", "bottom"]}>
@@ -113,7 +78,7 @@ export default function LoginScreen() {
               <Button
                 text="Login"
                 isLoading={isPending}
-                onPress={handleSubmit(handleLogin)}
+                onPress={handleSubmit((data: LoginForm) => mutate(data))}
               />
 
               <View className="flex-row justify-center items-center gap-1">
