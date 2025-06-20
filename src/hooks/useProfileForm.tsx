@@ -1,0 +1,101 @@
+import { useEffect } from "react";
+import { router } from "expo-router";
+import { useForm, Controller, useWatch } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import Snackbar from "react-native-snackbar";
+
+import useAuthStore from "@/store/useAuthStore";
+import useMediaPicker from "@/hooks/useMediaPicker";
+
+import { updateProfile } from "@/api/profile";
+
+import { replaceEmptyWithNull } from "@/helpers/data";
+
+const schema = z.object({
+  avatar: z.union([
+    z.string(),
+    z.null(),
+    z.object({ uri: z.string(), mimeType: z.string() }),
+  ]),
+  name: z.string({
+    required_error: "Name is required",
+  }),
+  phone_number: z.union([z.string(), z.null()]),
+  location: z.union([z.string(), z.null()]),
+  bio: z.union([z.string(), z.null()]),
+});
+
+export type ProfileForm = z.infer<typeof schema>;
+
+const useProfileForm = () => {
+  const profile = useAuthStore((state) => state.profile);
+  const setProfile = useAuthStore((state) => state.setProfile);
+  const { media, handlePickMedia } = useMediaPicker();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data: ProfileForm) => {
+      return updateProfile(replaceEmptyWithNull(data), profile?.id || "");
+    },
+    onSuccess: (data) => {
+      setProfile(data.id);
+      router.back();
+    },
+    onError: (error) => {
+      Snackbar.show({
+        text: error.message,
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (profile) {
+      const { avatar, name, phone_number, location, bio } = profile;
+      reset({ avatar, name, phone_number, location, bio });
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    if (media) {
+      setValue("avatar", { uri: media.uri, mimeType: media.mimeType! });
+    }
+  }, [media]);
+
+  const avatar = useWatch({ control, name: "avatar" });
+
+  const avatarUri =
+    typeof avatar === "object" && avatar !== null ? avatar.uri : avatar;
+
+  return {
+    form: {
+      Controller,
+      control,
+      errors,
+      handleSubmit,
+    },
+    query: {
+      mutate,
+      isPending,
+    },
+    mediaPicker: {
+      handlePickMedia,
+    },
+    meta: {
+      avatarUri,
+    },
+  };
+};
+
+export default useProfileForm;

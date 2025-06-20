@@ -27,7 +27,7 @@ export default function Button({
   isLoading,
   ...rest
 }: ButtonProps) {
-  const defaultContainerClass = `h-16 flex-row justify-center items-center gap-2 rounded-2xl ${rest.disabled && "opacity-50"}`;
+  const defaultContainerClass = `h-14 flex-row justify-center items-center gap-2 rounded-2xl ${rest.disabled && "opacity-50"}`;
   const containerClass: Record<Variant, string> = {
     filled: "bg-tint",
     outlined: "border border-tint",

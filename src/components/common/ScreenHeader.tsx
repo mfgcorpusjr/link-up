@@ -14,7 +14,7 @@ export default function ScreenHeader({
   rightIcon,
 }: ScreenHeaderProps) {
   return (
-    <View className="flex-row justify-center items-center">
+    <View className="flex-row justify-center items-center pt-2">
       {leftIcon && <View className="absolute left-0">{leftIcon}</View>}
 
       <Text variant="title">{title}</Text>

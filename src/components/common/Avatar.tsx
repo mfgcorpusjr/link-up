@@ -1,7 +1,7 @@
 import { Pressable, Image } from "react-native";
 
 type AvatarProps = {
-  uri?: string | null;
+  uri: string | null;
   size?: number;
   onPress?: () => void;
 };
