@@ -16,9 +16,11 @@ export default function HomeHeader() {
 
       <View className="flex-row items-center ml-auto gap-5">
         <Icon name="heart-outline" size={32} />
-        <Icon name="add-circle-outline" size={32} />
+        <Link href="/post/create" asChild>
+          <Icon name="add-circle-outline" size={32} />
+        </Link>
         <Link href="/profile" asChild>
-          <Avatar uri={profile?.avatar} />
+          <Avatar uri={profile?.avatar || null} />
         </Link>
       </View>
     </View>

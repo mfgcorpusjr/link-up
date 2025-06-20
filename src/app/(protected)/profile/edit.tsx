@@ -105,9 +105,9 @@ export default function EditProfileScreen() {
                       value={value ?? ""}
                       onChangeText={onChange}
                       onBlur={onBlur}
-                      className="h-20"
                       placeholder="Tell us a little about yourself..."
                       multiline
+                      className="h-20"
                     />
                   )}
                   name="bio"
