@@ -3,12 +3,12 @@ import { supabase } from "@/lib/supabase";
 import { SignUpForm } from "@/hooks/useSignUpForm";
 import { LoginForm } from "@/hooks/useLoginForm";
 
-export const signUp = async (payload: SignUpForm) => {
+export const signUp = async (form: SignUpForm) => {
   const { error } = await supabase.auth.signUp({
-    ...payload,
+    ...form,
     options: {
       data: {
-        name: payload.name,
+        name: form.name,
       },
     },
   });
@@ -16,8 +16,8 @@ export const signUp = async (payload: SignUpForm) => {
   if (error) throw new Error(error.message);
 };
 
-export const login = async (payload: LoginForm) => {
-  const { error } = await supabase.auth.signInWithPassword(payload);
+export const login = async (form: LoginForm) => {
+  const { error } = await supabase.auth.signInWithPassword(form);
 
   if (error) throw new Error(error.message);
 };

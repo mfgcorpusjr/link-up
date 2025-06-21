@@ -16,17 +16,15 @@ export const getProfile = async (id: string) => {
 };
 
 export const updateProfile = async (form: ProfileForm, id: string) => {
-  const payload = { ...form };
-
-  if (typeof payload.avatar === "object" && payload.avatar !== null) {
-    const path = "avatars/" + payload.avatar.uri.split("/").pop();
-    const fileUri = await uploadFile("uploads", path, payload.avatar);
-    payload.avatar = fileUri;
+  if (form.avatar !== null && typeof form.avatar === "object") {
+    const path = "avatars/" + form.avatar.uri.split("/").pop();
+    const fileUri = await uploadFile("uploads", path, form.avatar);
+    form.avatar = fileUri;
   }
 
   const { data } = await supabase
     .from("profiles")
-    .update(payload)
+    .update(form)
     .eq("id", id)
     .select()
     .single()

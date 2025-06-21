@@ -9,47 +9,45 @@ import Snackbar from "react-native-snackbar";
 import useAuthStore from "@/store/useAuthStore";
 import useMediaPicker from "@/hooks/useMediaPicker";
 
-import { updateProfile } from "@/api/profile";
+import { createPost } from "@/api/post";
 
-import { replaceEmptyWithNull } from "@/helpers/data";
+import { isImage } from "@/helpers/image";
 
 const schema = z.object({
-  avatar: z.union([
+  profile_id: z.string({ required_error: "Profile is required" }),
+  text: z.string({ required_error: "Text is required" }),
+  file: z.union([
     z.string(),
     z.null(),
     z.object({ uri: z.string(), mimeType: z.string() }),
   ]),
-  name: z.string({
-    required_error: "Name is required",
-  }),
-  phone_number: z.union([z.string(), z.null()]),
-  location: z.union([z.string(), z.null()]),
-  bio: z.union([z.string(), z.null()]),
 });
 
-export type ProfileForm = z.infer<typeof schema>;
+export type PostForm = z.infer<typeof schema>;
 
-const useProfileForm = () => {
+const usePostForm = () => {
   const profile = useAuthStore((state) => state.profile);
-  const setProfile = useAuthStore((state) => state.setProfile);
   const { media, handlePickMedia } = useMediaPicker();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-    reset,
     setValue,
   } = useForm({
     resolver: zodResolver(schema),
+    defaultValues: {
+      profile_id: undefined,
+      text: undefined,
+      file: null,
+    },
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (data: ProfileForm) => {
-      return updateProfile(replaceEmptyWithNull(data), profile?.id || "");
+    mutationFn: (data: PostForm) => {
+      return createPost(data);
     },
-    onSuccess: (data) => {
-      setProfile(data.id);
+    onSuccess: () => {
       router.back();
     },
     onError: (error) => {
@@ -62,22 +60,21 @@ const useProfileForm = () => {
 
   useEffect(() => {
     if (profile) {
-      const { avatar, name, phone_number, location, bio } = profile;
-      reset({ avatar, name, phone_number, location, bio });
+      setValue("profile_id", profile.id);
     }
   }, [profile]);
 
   useEffect(() => {
     if (media) {
-      setValue("avatar", { uri: media.uri, mimeType: media.mimeType! });
+      setValue("file", { uri: media.uri, mimeType: media.mimeType! });
     }
   }, [media]);
 
-  const avatar = useWatch({ control, name: "avatar" });
-  const avatarUri =
-    avatar !== null && typeof avatar === "object" ? avatar.uri : avatar;
+  const file = useWatch({ control, name: "file" });
+  const fileUri = file !== null && typeof file === "object" ? file.uri : file;
 
   return {
+    profile,
     form: {
       Controller,
       control,
@@ -92,9 +89,11 @@ const useProfileForm = () => {
       handlePickMedia,
     },
     meta: {
-      avatarUri,
+      fileUri,
+      isImageFile: isImage(file),
+      removeFile: () => setValue("file", null),
     },
   };
 };
 
-export default useProfileForm;
+export default usePostForm;

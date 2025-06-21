@@ -31,7 +31,7 @@ export default function EditProfileScreen() {
               <Avatar uri={avatarUri} size={80} />
               <Pressable
                 className="bg-white shadow-lg rounded-full p-[4] absolute -bottom-2 -right-3"
-                onPress={handlePickMedia}
+                onPress={() => handlePickMedia()}
               >
                 <Icon name="camera-outline" size={20} />
               </Pressable>
