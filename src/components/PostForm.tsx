@@ -12,10 +12,10 @@ import usePostForm, { PostForm as TPostForm } from "@/hooks/usePostForm";
 export default function PostForm() {
   const {
     profile,
-    form: { Controller, control, errors, handleSubmit },
+    form: { Controller, control, errors, handleSubmit, removeFile },
     query: { mutate, isPending },
     mediaPicker: { handlePickMedia },
-    meta: { fileUri, isImageFile, removeFile },
+    meta: { fileUri, isImageFile },
   } = usePostForm();
 
   return (

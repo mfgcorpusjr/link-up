@@ -80,6 +80,7 @@ const usePostForm = () => {
       control,
       errors,
       handleSubmit,
+      removeFile: () => setValue("file", null),
     },
     query: {
       mutate,
@@ -91,7 +92,6 @@ const usePostForm = () => {
     meta: {
       fileUri,
       isImageFile: isImage(file),
-      removeFile: () => setValue("file", null),
     },
   };
 };
