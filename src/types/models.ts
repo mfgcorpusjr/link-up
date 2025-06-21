@@ -40,3 +40,20 @@ export type Notification = {
   is_read: boolean;
   created_at: Date;
 };
+
+export type PostWithProfile = Post & {
+  profile: Profile;
+};
+
+export type LikeWithProfile = Like & {
+  profile: Profile;
+};
+
+export type CommentWithProfile = Comment & {
+  profile: Profile;
+};
+
+export type PostItem = PostWithProfile & {
+  likes: LikeWithProfile[];
+  comments: CommentWithProfile[];
+};

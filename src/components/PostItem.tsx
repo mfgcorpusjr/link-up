@@ -1,0 +1,61 @@
+import { View } from "react-native";
+
+import Avatar from "@/components/common/Avatar";
+import Icon from "@/components/common/Icon";
+import Text from "@/components/ui/Text";
+import ImagePreview from "@/components/ImagePreview";
+import VideoPreview from "@/components/VideoPreview";
+
+import { PostItem as TPostItem } from "@/types/models";
+
+import { humanReadableDate } from "@/helpers/date";
+import { isImage } from "@/helpers/image";
+
+type PostItemProps = {
+  post: TPostItem;
+};
+
+const shadow = {
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 1 },
+  shadowOpacity: 0.2,
+  shadowRadius: 1.41,
+  elevation: 2,
+};
+
+export default function PostItem({ post }: PostItemProps) {
+  return (
+    <View
+      className="bg-white border border-zinc-200 rounded-2xl gap-4 p-4"
+      style={shadow}
+    >
+      <View className="flex-row items-center gap-4">
+        <Avatar uri={post.profile.avatar} size={40} />
+        <View className="flex-1">
+          <Text className="font-bold">{post.profile.name}</Text>
+          <Text variant="caption">{humanReadableDate(post.created_at)}</Text>
+        </View>
+        <Icon name="ellipsis-horizontal-outline" size={20} />
+      </View>
+
+      <Text>{post.text}</Text>
+
+      {post.file && isImage(post.file) && <ImagePreview uri={post.file} />}
+      {post.file && !isImage(post.file) && <VideoPreview uri={post.file} />}
+
+      <View className="flex-row items-center gap-4">
+        <View className="flex-row items-center gap-2">
+          <Icon name="heart-outline" />
+          <Text>{post.likes.length}</Text>
+        </View>
+
+        <View className="flex-row items-center gap-2">
+          <Icon name="chatbox-ellipses-outline" />
+          <Text>{post.comments.length}</Text>
+        </View>
+
+        <Icon name="share-social-outline" />
+      </View>
+    </View>
+  );
+}

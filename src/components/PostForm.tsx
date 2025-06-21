@@ -1,10 +1,11 @@
-import { View, Image, Pressable } from "react-native";
+import { View, Pressable } from "react-native";
 
 import Avatar from "@/components/common/Avatar";
 import Icon from "@/components/common/Icon";
 import Text from "@/components/ui/Text";
 import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
+import ImagePreview from "@/components/ImagePreview";
 import VideoPreview from "@/components/VideoPreview";
 
 import usePostForm, { PostForm as TPostForm } from "@/hooks/usePostForm";
@@ -50,9 +51,9 @@ export default function PostForm() {
       </View>
 
       {fileUri ? (
-        <View className="w-full aspect-[4/3] rounded-2xl overflow-hidden">
+        <View>
           {isImageFile ? (
-            <Image className="flex-1" source={{ uri: fileUri }} />
+            <ImagePreview uri={fileUri} />
           ) : (
             <VideoPreview uri={fileUri} />
           )}

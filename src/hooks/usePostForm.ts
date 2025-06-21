@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Snackbar from "react-native-snackbar";
 
 import useAuthStore from "@/store/useAuthStore";
@@ -28,6 +28,7 @@ export type PostForm = z.infer<typeof schema>;
 const usePostForm = () => {
   const profile = useAuthStore((state) => state.profile);
   const { media, handlePickMedia } = useMediaPicker();
+  const queryClient = useQueryClient();
 
   const {
     control,
@@ -48,6 +49,7 @@ const usePostForm = () => {
       return createPost(data);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
       router.back();
     },
     onError: (error) => {

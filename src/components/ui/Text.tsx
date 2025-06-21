@@ -2,6 +2,7 @@ import { Text as RNText, TextProps as RNTextProps } from "react-native";
 import { twMerge } from "tailwind-merge";
 
 type Variant =
+  | "caption"
   | "body"
   | "link"
   | "error"
@@ -16,8 +17,9 @@ type TextProps = {
 
 export default function Text({ variant = "body", ...rest }: TextProps) {
   const textClass: Record<Variant, string> = {
-    body: "text-base text-zinc-600",
-    link: "text-base text-tint font-bold",
+    caption: "text-base text-zinc-400",
+    body: "text-lg text-zinc-600",
+    link: "text-lg text-tint font-bold",
     error: "text-base text-rose-500",
     subHeadline: "text-xl text-zinc-900 font-semibold",
     headline: "text-2xl text-zinc-900 font-semibold",
