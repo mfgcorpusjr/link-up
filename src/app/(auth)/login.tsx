@@ -29,7 +29,9 @@ export default function LoginScreen() {
           </View>
 
           <View className="gap-3">
-            <Text className="mb-3">Please login to continue</Text>
+            <Text variant="caption" className="mb-3">
+              Please login to continue
+            </Text>
 
             <View>
               <Controller

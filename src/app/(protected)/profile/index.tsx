@@ -38,7 +38,7 @@ export default function ProfileScreen() {
             <Text variant="headline" className="mt-4">
               {profile?.name}
             </Text>
-            <Text>{profile?.location || "N/A"}</Text>
+            <Text variant="caption">{profile?.location || "N/A"}</Text>
           </View>
 
           <View className="gap-4">

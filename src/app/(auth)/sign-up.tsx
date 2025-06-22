@@ -29,7 +29,7 @@ export default function SignUpScreen() {
           </View>
 
           <View className="gap-3">
-            <Text className="mb-3">
+            <Text variant="caption" className="mb-3">
               Please fill the details to create an account
             </Text>
 

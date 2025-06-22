@@ -25,7 +25,7 @@ export default function PostForm() {
         <Avatar uri={profile?.avatar || null} size={60} />
         <View>
           <Text variant="headline">{profile?.name}</Text>
-          <Text>Public</Text>
+          <Text variant="caption">Public</Text>
         </View>
       </View>
 

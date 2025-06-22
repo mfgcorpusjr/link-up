@@ -38,7 +38,9 @@ export default function EditProfileScreen() {
             </View>
 
             <View className="gap-3">
-              <Text className="mb-3">Please fill your profile details</Text>
+              <Text variant="caption" className="mb-3">
+                Please fill your profile details
+              </Text>
 
               <View>
                 <Controller
