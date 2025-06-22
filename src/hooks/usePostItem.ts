@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Share, ShareContent } from "react-native";
 import { useMutation } from "@tanstack/react-query";
 import Snackbar from "react-native-snackbar";
 
@@ -8,6 +9,8 @@ import { PostItem } from "@/types/models";
 
 import useAuthStore from "@/store/useAuthStore";
 
+import { downloadRemoteFile } from "@/helpers/image";
+
 export type Payload = {
   post_id: number;
   profile_id: string;
@@ -16,6 +19,7 @@ export type Payload = {
 const usePostItem = (post: PostItem) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likePayload, setLikePayload] = useState<Payload>();
+  const [isSharing, setIsSharing] = useState(false);
   const profile = useAuthStore((state) => state.profile);
 
   useEffect(() => {
@@ -36,9 +40,25 @@ const usePostItem = (post: PostItem) => {
     },
   });
 
+  const handleShare = async () => {
+    try {
+      setIsSharing(true);
+
+      const content: ShareContent = { message: post.text };
+      if (post.file) content.url = await downloadRemoteFile(post.file);
+      Share.share(content);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
   return {
     isLiked,
     handleToggleLike: () => handleToggleLike(),
+    isSharing,
+    handleShare,
   };
 };
 

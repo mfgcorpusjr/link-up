@@ -27,7 +27,8 @@ const shadow = {
 };
 
 export default function PostItem({ post, isViewable }: PostItemProps) {
-  const { isLiked, handleToggleLike } = usePostItem(post);
+  const { isLiked, handleToggleLike, isSharing, handleShare } =
+    usePostItem(post);
 
   return (
     <View
@@ -65,7 +66,11 @@ export default function PostItem({ post, isViewable }: PostItemProps) {
           <Text>{post.comments.length}</Text>
         </View>
 
-        <Icon name="share-social-outline" />
+        <Icon
+          name="share-social-outline"
+          isLoading={isSharing}
+          onPress={handleShare}
+        />
       </View>
     </View>
   );

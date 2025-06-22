@@ -19,3 +19,10 @@ export const isImage = (file: File | string | null) => {
 
   return false;
 };
+
+export const downloadRemoteFile = async (remoteUri: string) => {
+  const fileName = remoteUri.split("/").pop();
+  const localUri = `${FileSystem.cacheDirectory}${fileName}`;
+  const { uri } = await FileSystem.downloadAsync(remoteUri, localUri);
+  return uri;
+};
