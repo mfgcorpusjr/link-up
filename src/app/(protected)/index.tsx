@@ -25,7 +25,12 @@ export default function HomeScreen() {
       fetchNextPage,
       isFetchingNextPage,
     },
-    meta: { flatListRef },
+    meta: {
+      flatListRef,
+      viewabilityConfig,
+      handleViewableItemsChanged,
+      activePostId,
+    },
   } = usePostList();
 
   return (
@@ -37,7 +42,9 @@ export default function HomeScreen() {
           ref={flatListRef}
           data={data?.pages.flat() || []}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <PostItem post={item} />}
+          renderItem={({ item }) => (
+            <PostItem post={item} isViewable={item.id === activePostId} />
+          )}
           refreshControl={
             <RefreshControl
               refreshing={isRefetching}
@@ -57,6 +64,8 @@ export default function HomeScreen() {
           ListEmptyComponent={
             <ListEmpty text="No posts found" isLoading={isLoading} />
           }
+          viewabilityConfig={viewabilityConfig}
+          onViewableItemsChanged={handleViewableItemsChanged}
           showsVerticalScrollIndicator={false}
           contentContainerClassName="gap-5 p-1"
         />

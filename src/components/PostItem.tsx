@@ -13,6 +13,7 @@ import { isImage } from "@/helpers/image";
 
 type PostItemProps = {
   post: TPostItem;
+  isViewable?: boolean;
 };
 
 const shadow = {
@@ -23,7 +24,7 @@ const shadow = {
   elevation: 2,
 };
 
-export default function PostItem({ post }: PostItemProps) {
+export default function PostItem({ post, isViewable }: PostItemProps) {
   return (
     <View
       className="bg-white border border-zinc-200 rounded-2xl gap-4 p-4"
@@ -41,7 +42,9 @@ export default function PostItem({ post }: PostItemProps) {
       <Text>{post.text}</Text>
 
       {post.file && isImage(post.file) && <ImagePreview uri={post.file} />}
-      {post.file && !isImage(post.file) && <VideoPreview uri={post.file} />}
+      {post.file && !isImage(post.file) && (
+        <VideoPreview uri={post.file} isViewable={isViewable} />
+      )}
 
       <View className="flex-row items-center gap-4">
         <View className="flex-row items-center gap-2">
