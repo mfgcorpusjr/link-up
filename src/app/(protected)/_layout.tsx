@@ -9,5 +9,12 @@ export default function ProtectedLayout() {
     return <Redirect href="/welcome" />;
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name="post/[id]/index"
+        options={{ presentation: "modal" }}
+      />
+    </Stack>
+  );
 }

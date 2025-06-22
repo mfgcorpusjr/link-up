@@ -7,7 +7,10 @@ type ListEmptyProps = {
   isLoading?: boolean;
 };
 
-export default function ListEmpty({ text, isLoading }: ListEmptyProps) {
+export default function ListEmpty({
+  text = "No data found",
+  isLoading,
+}: ListEmptyProps) {
   return (
     <View className="justify-center items-center p-10">
       {isLoading ? (

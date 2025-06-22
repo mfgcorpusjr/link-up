@@ -1,4 +1,5 @@
 import { View } from "react-native";
+import { Link } from "expo-router";
 
 import Avatar from "@/components/common/Avatar";
 import Icon from "@/components/common/Icon";
@@ -16,6 +17,8 @@ import usePostItem from "@/hooks/usePostItem";
 type PostItemProps = {
   post: TPostItem;
   isViewable?: boolean;
+  showMoreIcon?: boolean;
+  showActions?: boolean;
 };
 
 const shadow = {
@@ -26,7 +29,12 @@ const shadow = {
   elevation: 2,
 };
 
-export default function PostItem({ post, isViewable }: PostItemProps) {
+export default function PostItem({
+  post,
+  isViewable,
+  showMoreIcon = true,
+  showActions = false,
+}: PostItemProps) {
   const { isLiked, handleToggleLike, isSharing, handleShare } =
     usePostItem(post);
 
@@ -41,7 +49,17 @@ export default function PostItem({ post, isViewable }: PostItemProps) {
           <Text className="font-bold">{post.profile.name}</Text>
           <Text variant="caption">{humanReadableDate(post.created_at)}</Text>
         </View>
-        <Icon name="ellipsis-horizontal-outline" size={20} />
+        {showMoreIcon && (
+          <Link href={`/post/${post.id}`} asChild>
+            <Icon name="ellipsis-horizontal-outline" size={20} />
+          </Link>
+        )}
+        {showActions && (
+          <View className="flex-row items-center gap-4">
+            <Icon name="pencil-outline" />
+            <Icon name="trash-outline" color="crimson" />
+          </View>
+        )}
       </View>
 
       <Text>{post.text}</Text>
@@ -62,7 +80,9 @@ export default function PostItem({ post, isViewable }: PostItemProps) {
         </View>
 
         <View className="flex-row items-center gap-2">
-          <Icon name="chatbox-ellipses-outline" />
+          <Link href={`/post/${post.id}`} asChild>
+            <Icon name="chatbox-ellipses-outline" />
+          </Link>
           <Text>{post.comments.length}</Text>
         </View>
 

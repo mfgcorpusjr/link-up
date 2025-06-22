@@ -32,3 +32,16 @@ export const createPost = async (form: PostForm) => {
 
   await supabase.from("posts").insert(form).throwOnError();
 };
+
+export const getPost = async (id: number) => {
+  const { data } = await supabase
+    .from("posts")
+    .select(
+      "*, profile:profiles(*), likes(*, profile:profiles(*)), comments(*, profile: profiles(*))"
+    )
+    .eq("id", id)
+    .single()
+    .throwOnError();
+
+  return data;
+};
