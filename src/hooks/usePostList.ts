@@ -1,3 +1,6 @@
+import { useRef, useCallback } from "react";
+import { FlatList } from "react-native";
+import { useFocusEffect } from "expo-router";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { getPosts } from "@/api/post";
@@ -5,6 +8,8 @@ import { getPosts } from "@/api/post";
 export const PAGE_SIZE = 10;
 
 const usePostList = () => {
+  const flatListRef = useRef<FlatList>(null);
+
   const {
     data,
     isLoading,
@@ -21,6 +26,14 @@ const usePostList = () => {
       lastPage.length < PAGE_SIZE ? undefined : allPages.length * PAGE_SIZE,
   });
 
+  useFocusEffect(
+    useCallback(() => {
+      if (flatListRef.current) {
+        flatListRef.current.scrollToOffset({ offset: 0, animated: false });
+      }
+    }, [])
+  );
+
   return {
     query: {
       data,
@@ -30,6 +43,9 @@ const usePostList = () => {
       hasNextPage,
       fetchNextPage,
       isFetchingNextPage,
+    },
+    meta: {
+      flatListRef,
     },
   };
 };

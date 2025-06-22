@@ -25,6 +25,7 @@ export default function HomeScreen() {
       fetchNextPage,
       isFetchingNextPage,
     },
+    meta: { flatListRef },
   } = usePostList();
 
   return (
@@ -33,6 +34,7 @@ export default function HomeScreen() {
         <HomeHeader />
 
         <FlatList
+          ref={flatListRef}
           data={data?.pages.flat() || []}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <PostItem post={item} />}
