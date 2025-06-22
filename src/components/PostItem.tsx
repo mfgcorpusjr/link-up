@@ -27,7 +27,7 @@ const shadow = {
 };
 
 export default function PostItem({ post, isViewable }: PostItemProps) {
-  const { isLiked, toggleLike } = usePostItem(post);
+  const { isLiked, handleToggleLike } = usePostItem(post);
 
   return (
     <View
@@ -55,7 +55,7 @@ export default function PostItem({ post, isViewable }: PostItemProps) {
           <Icon
             name={isLiked ? "heart" : "heart-outline"}
             color={isLiked ? "crimson" : "black"}
-            onPress={toggleLike}
+            onPress={handleToggleLike}
           />
           <Text>{post.likes.length}</Text>
         </View>
