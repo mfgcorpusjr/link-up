@@ -21,7 +21,7 @@ export default function EditProfileScreen() {
   } = useProfileForm();
 
   return (
-    <ScreenWrapper className="pb-4" edges={["top", "bottom"]}>
+    <ScreenWrapper className="pb-4">
       <KeyboardAvoidingScrollView>
         <View className="gap-10">
           <ScreenHeader title="Edit Profile" leftIcon={<BackButton />} />

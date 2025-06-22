@@ -18,7 +18,7 @@ export default function LoginScreen() {
   } = useLoginForm();
 
   return (
-    <ScreenWrapper className="pb-4" edges={["top", "bottom"]}>
+    <ScreenWrapper className="pb-4">
       <KeyboardAvoidingScrollView>
         <View className="gap-16">
           <BackButton />

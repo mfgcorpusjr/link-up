@@ -8,7 +8,7 @@ import PostForm from "@/components/PostForm";
 
 export default function CreatePostScreen() {
   return (
-    <ScreenWrapper className="pb-4" edges={["top", "bottom"]}>
+    <ScreenWrapper className="pb-4">
       <KeyboardAvoidingScrollView>
         <View className="gap-10">
           <ScreenHeader title="Create Post" leftIcon={<BackButton />} />

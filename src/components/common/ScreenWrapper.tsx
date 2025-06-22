@@ -10,7 +10,7 @@ export default function ScreenWrapper({
   ...rest
 }: PropsWithChildren<SafeAreaViewProps>) {
   const screenWrapperClass = "flex-1 bg-white px-4 pt-4";
-  const edges = rest.edges || ["top"];
+  const edges = rest.edges || ["top", "bottom"];
 
   return (
     <SafeAreaView

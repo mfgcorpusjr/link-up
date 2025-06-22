@@ -29,7 +29,7 @@ export default function HomeScreen() {
   } = usePostList();
 
   return (
-    <ScreenWrapper edges={["top", "bottom"]}>
+    <ScreenWrapper>
       <View className="flex-1 gap-4">
         <HomeHeader />
 

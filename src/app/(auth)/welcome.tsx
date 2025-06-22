@@ -7,7 +7,7 @@ import Button from "@/components/ui/Button";
 
 export default function WelcomeScreen() {
   return (
-    <ScreenWrapper className="pb-4" edges={["top", "bottom"]}>
+    <ScreenWrapper className="pb-4">
       <View className="flex-1 justify-center items-center gap-8">
         <Image
           className="w-full h-20"
