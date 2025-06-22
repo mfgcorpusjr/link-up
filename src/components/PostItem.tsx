@@ -11,6 +11,8 @@ import { PostItem as TPostItem } from "@/types/models";
 import { humanReadableDate } from "@/helpers/date";
 import { isImage } from "@/helpers/image";
 
+import usePostItem from "@/hooks/usePostItem";
+
 type PostItemProps = {
   post: TPostItem;
   isViewable?: boolean;
@@ -25,6 +27,8 @@ const shadow = {
 };
 
 export default function PostItem({ post, isViewable }: PostItemProps) {
+  const { isLiked, toggleLike } = usePostItem(post);
+
   return (
     <View
       className="bg-white border border-zinc-200 rounded-2xl gap-4 p-4"
@@ -48,7 +52,11 @@ export default function PostItem({ post, isViewable }: PostItemProps) {
 
       <View className="flex-row items-center gap-4">
         <View className="flex-row items-center gap-2">
-          <Icon name="heart-outline" />
+          <Icon
+            name={isLiked ? "heart" : "heart-outline"}
+            color={isLiked ? "crimson" : "black"}
+            onPress={toggleLike}
+          />
           <Text>{post.likes.length}</Text>
         </View>
 
