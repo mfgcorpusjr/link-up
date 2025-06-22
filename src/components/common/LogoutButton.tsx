@@ -1,4 +1,4 @@
-import { View, Pressable, ActivityIndicator } from "react-native";
+import { View, Pressable, ActivityIndicator, Alert } from "react-native";
 import { useMutation } from "@tanstack/react-query";
 import Snackbar from "react-native-snackbar";
 import { twMerge } from "tailwind-merge";
@@ -18,6 +18,13 @@ export default function LogoutButton() {
     },
   });
 
+  const handleLogout = () => {
+    Alert.alert("Logout", "Are you sure you want to continue?", [
+      { text: "Cancel" },
+      { text: "Ok", style: "destructive", onPress: () => mutate() },
+    ]);
+  };
+
   const containerClass = "w-11 aspect-square justify-center items-center";
 
   if (isPending) {
@@ -31,7 +38,7 @@ export default function LogoutButton() {
   return (
     <Pressable
       className={twMerge(containerClass, "rounded-2xl bg-rose-100")}
-      onPress={() => mutate()}
+      onPress={handleLogout}
     >
       <Icon name="power-outline" color="crimson" />
     </Pressable>
