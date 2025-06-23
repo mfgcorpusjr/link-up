@@ -19,7 +19,7 @@ const schema = z.object({
 
 export type LoginForm = z.infer<typeof schema>;
 
-const useLoginForm = () => {
+const useLogin = () => {
   const {
     control,
     handleSubmit,
@@ -29,7 +29,7 @@ const useLoginForm = () => {
     resolver: zodResolver(schema),
   });
 
-  const { mutate, isPending } = useMutation({
+  const { isPending, mutate } = useMutation({
     mutationFn: login,
     onError: (error) => {
       reset();
@@ -48,10 +48,10 @@ const useLoginForm = () => {
       handleSubmit,
     },
     query: {
-      mutate,
       isPending,
+      login: mutate,
     },
   };
 };
 
-export default useLoginForm;
+export default useLogin;

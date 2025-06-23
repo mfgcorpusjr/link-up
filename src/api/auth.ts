@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
 
-import { SignUpForm } from "@/hooks/useSignUpForm";
-import { LoginForm } from "@/hooks/useLoginForm";
+import { SignUpForm } from "@/hooks/useSignUp";
+import { LoginForm } from "@/hooks/useLogin";
 
 export const signUp = async (form: SignUpForm) => {
   const { error } = await supabase.auth.signUp({

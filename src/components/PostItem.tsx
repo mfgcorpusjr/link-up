@@ -12,7 +12,8 @@ import { PostItem as TPostItem } from "@/types/models";
 import { humanReadableDate } from "@/helpers/date";
 import { isImage } from "@/helpers/image";
 
-import usePostItem from "@/hooks/usePostItem";
+import useLike from "@/hooks/useLike";
+import useShare from "@/hooks/useShare";
 
 type PostItemProps = {
   post: TPostItem;
@@ -35,8 +36,8 @@ export default function PostItem({
   showMoreIcon = true,
   showActions = false,
 }: PostItemProps) {
-  const { isLiked, handleToggleLike, isSharing, handleShare } =
-    usePostItem(post);
+  const { isLiked, toggleLike } = useLike(post);
+  const { isSharing, share } = useShare(post);
 
   return (
     <View
@@ -74,7 +75,7 @@ export default function PostItem({
           <Icon
             name={isLiked ? "heart" : "heart-outline"}
             color={isLiked ? "crimson" : "black"}
-            onPress={handleToggleLike}
+            onPress={toggleLike}
           />
           <Text>{post.likes.length}</Text>
         </View>
@@ -89,7 +90,7 @@ export default function PostItem({
         <Icon
           name="share-social-outline"
           isLoading={isSharing}
-          onPress={handleShare}
+          onPress={share}
         />
       </View>
     </View>

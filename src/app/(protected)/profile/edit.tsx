@@ -10,15 +10,15 @@ import Text from "@/components/ui/Text";
 import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
 
-import useProfileForm, { ProfileForm } from "@/hooks/useProfileForm";
+import useProfile, { ProfileForm } from "@/hooks/useProfile";
 
 export default function EditProfileScreen() {
   const {
     form: { Controller, control, errors, handleSubmit },
-    query: { mutate, isPending },
-    mediaPicker: { handlePickMedia },
+    query: { isPending, submit },
+    mediaPicker: { pickMedia },
     meta: { avatarUri },
-  } = useProfileForm();
+  } = useProfile();
 
   return (
     <ScreenWrapper className="pb-4">
@@ -31,7 +31,7 @@ export default function EditProfileScreen() {
               <Avatar uri={avatarUri} size={80} />
               <Pressable
                 className="bg-white shadow-lg rounded-full p-[4] absolute -bottom-2 -right-3"
-                onPress={() => handlePickMedia()}
+                onPress={() => pickMedia()}
               >
                 <Icon name="camera-outline" size={20} />
               </Pressable>
@@ -122,7 +122,7 @@ export default function EditProfileScreen() {
                 text="Update"
                 isLoading={isPending}
                 onPress={handleSubmit((data: ProfileForm) => {
-                  mutate(data);
+                  submit(data);
                 })}
               />
             </View>

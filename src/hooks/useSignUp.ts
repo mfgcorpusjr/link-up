@@ -24,7 +24,7 @@ const schema = z.object({
 
 export type SignUpForm = z.infer<typeof schema>;
 
-const useSignUpForm = () => {
+const useSignUp = () => {
   const {
     control,
     handleSubmit,
@@ -34,7 +34,7 @@ const useSignUpForm = () => {
     resolver: zodResolver(schema),
   });
 
-  const { mutate, isPending } = useMutation({
+  const { isPending, mutate } = useMutation({
     mutationFn: signUp,
     onError: (error) => {
       reset();
@@ -53,10 +53,10 @@ const useSignUpForm = () => {
       handleSubmit,
     },
     query: {
-      mutate,
       isPending,
+      signUp: mutate,
     },
   };
 };
 
-export default useSignUpForm;
+export default useSignUp;

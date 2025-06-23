@@ -9,13 +9,13 @@ import Text from "@/components/ui/Text";
 import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
 
-import useLoginForm, { LoginForm } from "@/hooks/useLoginForm";
+import useLogin, { LoginForm } from "@/hooks/useLogin";
 
 export default function LoginScreen() {
   const {
     form: { Controller, control, errors, handleSubmit },
-    query: { mutate, isPending },
-  } = useLoginForm();
+    query: { isPending, login },
+  } = useLogin();
 
   return (
     <ScreenWrapper className="pb-4">
@@ -80,7 +80,7 @@ export default function LoginScreen() {
               <Button
                 text="Login"
                 isLoading={isPending}
-                onPress={handleSubmit((data: LoginForm) => mutate(data))}
+                onPress={handleSubmit((data: LoginForm) => login(data))}
               />
 
               <View className="flex-row justify-center items-center gap-1">

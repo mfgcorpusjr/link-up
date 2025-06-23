@@ -25,9 +25,9 @@ const schema = z.object({
 
 export type PostForm = z.infer<typeof schema>;
 
-const usePostForm = () => {
+const usePost = () => {
   const profile = useAuthStore((state) => state.profile);
-  const { media, handlePickMedia } = useMediaPicker();
+  const { media, pickMedia } = useMediaPicker();
   const queryClient = useQueryClient();
 
   const {
@@ -44,7 +44,7 @@ const usePostForm = () => {
     },
   });
 
-  const { mutate, isPending } = useMutation({
+  const { isPending, mutate: submit } = useMutation({
     mutationFn: (data: PostForm) => {
       return createPost(data);
     },
@@ -76,7 +76,6 @@ const usePostForm = () => {
   const fileUri = file !== null && typeof file === "object" ? file.uri : file;
 
   return {
-    profile,
     form: {
       Controller,
       control,
@@ -85,17 +84,18 @@ const usePostForm = () => {
       removeFile: () => setValue("file", null),
     },
     query: {
-      mutate,
       isPending,
+      submit,
     },
     mediaPicker: {
-      handlePickMedia,
+      pickMedia,
     },
     meta: {
+      profile,
       fileUri,
       isImageFile: isImage(file),
     },
   };
 };
 
-export default usePostForm;
+export default usePost;

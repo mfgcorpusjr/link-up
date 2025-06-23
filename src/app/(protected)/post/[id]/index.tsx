@@ -24,10 +24,10 @@ export default function PostDetailsScreen() {
   const profile = useAuthStore((state) => state.profile);
   const { id } = useLocalSearchParams();
   const {
-    query: { data, isLoading, error },
+    query: { isLoading, data, error },
   } = usePostDetails(Number(id));
 
-  if (isLoading || !profile) {
+  if (isLoading) {
     return (
       <Wrapper>
         <Loading />
@@ -48,7 +48,7 @@ export default function PostDetailsScreen() {
       <PostItem
         post={data}
         showMoreIcon={false}
-        showActions={data.profile_id === profile.id}
+        showActions={data.profile_id === profile?.id}
       />
     </Wrapper>
   );

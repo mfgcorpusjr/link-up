@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { uploadFile } from "@/api/storage";
 
 import { PAGE_SIZE } from "@/hooks/usePostList";
-import { PostForm } from "@/hooks/usePostForm";
+import { PostForm } from "@/hooks/usePost";
 
 import { PostItem } from "@/types/models";
 

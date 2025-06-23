@@ -9,13 +9,13 @@ import Text from "@/components/ui/Text";
 import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
 
-import useSignUpForm, { SignUpForm } from "@/hooks/useSignUpForm";
+import useSignUp, { SignUpForm } from "@/hooks/useSignUp";
 
 export default function SignUpScreen() {
   const {
     form: { Controller, control, errors, handleSubmit },
-    query: { mutate, isPending },
-  } = useSignUpForm();
+    query: { isPending, signUp },
+  } = useSignUp();
 
   return (
     <ScreenWrapper className="pb-4">
@@ -100,7 +100,7 @@ export default function SignUpScreen() {
               <Button
                 text="Sign Up"
                 isLoading={isPending}
-                onPress={handleSubmit((data: SignUpForm) => mutate(data))}
+                onPress={handleSubmit((data: SignUpForm) => signUp(data))}
               />
 
               <View className="flex-row justify-center items-center gap-1">

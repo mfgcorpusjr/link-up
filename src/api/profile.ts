@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 
 import { uploadFile } from "@/api/storage";
 
-import { ProfileForm } from "@/hooks/useProfileForm";
+import { ProfileForm } from "@/hooks/useProfile";
 
 export const getProfile = async (id: string) => {
   const { data } = await supabase

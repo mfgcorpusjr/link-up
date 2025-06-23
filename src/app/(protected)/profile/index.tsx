@@ -23,7 +23,6 @@ export default function ProfileScreen() {
           leftIcon={<BackButton />}
           rightIcon={<LogoutButton />}
         />
-
         <View className="gap-8">
           <View className="items-center">
             <View>
