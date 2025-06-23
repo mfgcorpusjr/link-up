@@ -3,17 +3,18 @@ import { router } from "expo-router";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Snackbar from "react-native-snackbar";
 
 import useAuthStore from "@/store/useAuthStore";
 import useMediaPicker from "@/hooks/useMediaPicker";
 
-import { createPost } from "@/api/post";
+import { upsertPost, getPost } from "@/api/post";
 
 import { isImage } from "@/helpers/image";
 
 const schema = z.object({
+  id: z.number().optional(),
   profile_id: z.string({ required_error: "Profile is required" }),
   text: z.string({ required_error: "Text is required" }),
   file: z.union([
@@ -25,7 +26,7 @@ const schema = z.object({
 
 export type PostForm = z.infer<typeof schema>;
 
-const useUpsertPost = () => {
+const useUpsertPost = (id: string | undefined) => {
   const profile = useAuthStore((state) => state.profile);
   const { media, handlePickMedia } = useMediaPicker();
   const queryClient = useQueryClient();
@@ -35,18 +36,26 @@ const useUpsertPost = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    reset,
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
+      id: undefined,
       profile_id: undefined,
       text: undefined,
       file: null,
     },
   });
 
+  const { data } = useQuery({
+    queryKey: ["posts", id],
+    queryFn: () => getPost(Number(id)),
+    enabled: !!id,
+  });
+
   const { isPending, mutate: submit } = useMutation({
     mutationFn: (data: PostForm) => {
-      return createPost(data);
+      return upsertPost(data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
@@ -71,6 +80,10 @@ const useUpsertPost = () => {
       setValue("file", { uri: media.uri, mimeType: media.mimeType! });
     }
   }, [media]);
+
+  useEffect(() => {
+    if (data) reset(data);
+  }, [data]);
 
   const file = useWatch({ control, name: "file" });
   const fileUri = file !== null && typeof file === "object" ? file.uri : file;

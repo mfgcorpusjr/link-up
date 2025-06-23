@@ -80,7 +80,10 @@ export default function PostItem({
         )}
         {showActionsIcon && (
           <View className="flex-row items-center gap-4">
-            <Icon name="pencil-outline" />
+            <Link href={`/post/${post.id}/edit`} asChild>
+              <Icon name="pencil-outline" />
+            </Link>
+
             <Icon
               name="trash-outline"
               color="crimson"

@@ -10,13 +10,17 @@ import VideoPreview from "@/components/VideoPreview";
 
 import useUpsertPost, { PostForm as TPostForm } from "@/hooks/useUpsertPost";
 
-export default function PostForm() {
+type PostFormProps = {
+  id?: string;
+};
+
+export default function PostForm({ id }: PostFormProps) {
   const {
     form: { Controller, control, errors, handleSubmit, removeFile },
     query: { isPending, submit },
     mediaPicker: { handlePickMedia },
     meta: { profile, fileUri, isImageFile },
-  } = useUpsertPost();
+  } = useUpsertPost(id);
 
   return (
     <View className="gap-8">
