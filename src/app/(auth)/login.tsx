@@ -14,7 +14,7 @@ import useLogin, { LoginForm } from "@/hooks/useLogin";
 export default function LoginScreen() {
   const {
     form: { Controller, control, errors, handleSubmit },
-    query: { isPending, login },
+    query: { isLoggingIn, handleLogin },
   } = useLogin();
 
   return (
@@ -79,8 +79,8 @@ export default function LoginScreen() {
             <View className="gap-4">
               <Button
                 text="Login"
-                isLoading={isPending}
-                onPress={handleSubmit((data: LoginForm) => login(data))}
+                isLoading={isLoggingIn}
+                onPress={handleSubmit((data: LoginForm) => handleLogin(data))}
               />
 
               <View className="flex-row justify-center items-center gap-1">

@@ -8,15 +8,15 @@ import Button from "@/components/ui/Button";
 import ImagePreview from "@/components/ImagePreview";
 import VideoPreview from "@/components/VideoPreview";
 
-import usePost, { PostForm as TPostForm } from "@/hooks/usePost";
+import useUpsertPost, { PostForm as TPostForm } from "@/hooks/useUpsertPost";
 
 export default function PostForm() {
   const {
     form: { Controller, control, errors, handleSubmit, removeFile },
     query: { isPending, submit },
-    mediaPicker: { pickMedia },
+    mediaPicker: { handlePickMedia },
     meta: { profile, fileUri, isImageFile },
-  } = usePost();
+  } = useUpsertPost();
 
   return (
     <View className="gap-8">
@@ -68,10 +68,10 @@ export default function PostForm() {
         <View className="flex-row justify-between items-center border border-zinc-200 rounded-2xl p-4">
           <Text variant="subHeadline">Add to your post</Text>
           <View className="flex-row items-center gap-5">
-            <Icon name="image-outline" onPress={() => pickMedia()} />
+            <Icon name="image-outline" onPress={() => handlePickMedia()} />
             <Icon
               name="videocam-outline"
-              onPress={() => pickMedia(["videos"])}
+              onPress={() => handlePickMedia(["videos"])}
             />
           </View>
         </View>

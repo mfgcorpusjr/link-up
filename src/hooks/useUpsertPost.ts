@@ -25,9 +25,9 @@ const schema = z.object({
 
 export type PostForm = z.infer<typeof schema>;
 
-const usePost = () => {
+const useUpsertPost = () => {
   const profile = useAuthStore((state) => state.profile);
-  const { media, pickMedia } = useMediaPicker();
+  const { media, handlePickMedia } = useMediaPicker();
   const queryClient = useQueryClient();
 
   const {
@@ -88,7 +88,7 @@ const usePost = () => {
       submit,
     },
     mediaPicker: {
-      pickMedia,
+      handlePickMedia,
     },
     meta: {
       profile,
@@ -98,4 +98,4 @@ const usePost = () => {
   };
 };
 
-export default usePost;
+export default useUpsertPost;

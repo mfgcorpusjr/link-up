@@ -5,8 +5,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { getPosts } from "@/api/post";
 
-export const PAGE_SIZE = 10;
-
 const usePostList = () => {
   const [activePostId, setActivePostId] = useState<number>();
   const flatListRef = useRef<FlatList>(null);
@@ -24,7 +22,7 @@ const usePostList = () => {
     queryFn: getPosts,
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) =>
-      lastPage.length < PAGE_SIZE ? undefined : allPages.length * PAGE_SIZE,
+      lastPage.length < 10 ? undefined : allPages.length * 10,
   });
 
   useFocusEffect(

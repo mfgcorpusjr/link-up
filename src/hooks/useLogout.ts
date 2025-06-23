@@ -5,7 +5,7 @@ import Snackbar from "react-native-snackbar";
 import { logout } from "@/api/auth";
 
 const useLogout = () => {
-  const { isPending, mutate } = useMutation({
+  const { isPending: isLoggingOut, mutate } = useMutation({
     mutationFn: logout,
     onError: (error) => {
       Snackbar.show({
@@ -23,8 +23,8 @@ const useLogout = () => {
   };
 
   return {
-    isPending,
-    logout: handleLogout,
+    isLoggingOut,
+    handleLogout,
   };
 };
 

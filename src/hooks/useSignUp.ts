@@ -34,14 +34,15 @@ const useSignUp = () => {
     resolver: zodResolver(schema),
   });
 
-  const { isPending, mutate } = useMutation({
+  const { isPending: isSigningUp, mutate } = useMutation({
     mutationFn: signUp,
     onError: (error) => {
-      reset();
       Snackbar.show({
         text: error.message,
         duration: Snackbar.LENGTH_SHORT,
       });
+
+      reset();
     },
   });
 
@@ -53,8 +54,8 @@ const useSignUp = () => {
       handleSubmit,
     },
     query: {
-      isPending,
-      signUp: mutate,
+      isSigningUp,
+      handleSignUp: mutate,
     },
   };
 };

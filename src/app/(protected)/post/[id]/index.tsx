@@ -27,7 +27,7 @@ export default function PostDetailsScreen() {
     query: { isLoading, data, error },
   } = usePostDetails(Number(id));
 
-  if (isLoading) {
+  if (isLoading || !profile) {
     return (
       <Wrapper>
         <Loading />
@@ -48,7 +48,8 @@ export default function PostDetailsScreen() {
       <PostItem
         post={data}
         showMoreIcon={false}
-        showActions={data.profile_id === profile?.id}
+        showActionsIcon={data.profile_id === profile.id}
+        onDeleteSuccess={() => router.back()}
       />
     </Wrapper>
   );

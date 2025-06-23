@@ -5,7 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 const useMediaPicker = () => {
   const [media, setMedia] = useState<ImagePicker.ImagePickerAsset>();
 
-  const pickMedia = async (
+  const handlePickMedia = async (
     mediaTypes: ImagePicker.MediaType[] = ["images"]
   ) => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -28,7 +28,7 @@ const useMediaPicker = () => {
 
   return {
     media,
-    pickMedia,
+    handlePickMedia,
   };
 };
 

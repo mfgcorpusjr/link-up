@@ -6,11 +6,11 @@ import Icon from "@/components/common/Icon";
 import useLogout from "@/hooks/useLogout";
 
 export default function LogoutButton() {
-  const { isPending, logout } = useLogout();
+  const { isLoggingOut, handleLogout } = useLogout();
 
   const containerClass = "w-11 aspect-square justify-center items-center";
 
-  if (isPending) {
+  if (isLoggingOut) {
     return (
       <View className={containerClass}>
         <ActivityIndicator className="text-tint" />
@@ -21,7 +21,7 @@ export default function LogoutButton() {
   return (
     <Pressable
       className={twMerge(containerClass, "rounded-2xl bg-rose-100")}
-      onPress={logout}
+      onPress={handleLogout}
     >
       <Icon name="power-outline" color="crimson" />
     </Pressable>

@@ -29,14 +29,15 @@ const useLogin = () => {
     resolver: zodResolver(schema),
   });
 
-  const { isPending, mutate } = useMutation({
+  const { isPending: isLoggingIn, mutate } = useMutation({
     mutationFn: login,
     onError: (error) => {
-      reset();
       Snackbar.show({
         text: error.message,
         duration: Snackbar.LENGTH_SHORT,
       });
+
+      reset();
     },
   });
 
@@ -48,8 +49,8 @@ const useLogin = () => {
       handleSubmit,
     },
     query: {
-      isPending,
-      login: mutate,
+      isLoggingIn,
+      handleLogin: mutate,
     },
   };
 };

@@ -2,8 +2,7 @@ import { supabase } from "@/lib/supabase";
 
 import { uploadFile } from "@/api/storage";
 
-import { PAGE_SIZE } from "@/hooks/usePostList";
-import { PostForm } from "@/hooks/usePost";
+import { PostForm } from "@/hooks/useUpsertPost";
 
 import { PostItem } from "@/types/models";
 
@@ -16,7 +15,7 @@ export const getPosts = async ({ pageParam = 0 }): Promise<PostItem[]> => {
       "*, profile:profiles(*), likes(*, profile:profiles(*)), comments(*, profile: profiles(*))"
     )
     .order("id", { ascending: false })
-    .range(pageParam, pageParam + PAGE_SIZE - 1)
+    .range(pageParam, pageParam + 10 - 1)
     .throwOnError();
 
   return data;
@@ -44,4 +43,8 @@ export const getPost = async (id: number) => {
     .throwOnError();
 
   return data;
+};
+
+export const deletePost = async (id: number) => {
+  await supabase.from("posts").delete().eq("id", id).throwOnError();
 };

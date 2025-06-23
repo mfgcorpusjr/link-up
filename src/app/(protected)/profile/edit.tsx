@@ -15,8 +15,8 @@ import useProfile, { ProfileForm } from "@/hooks/useProfile";
 export default function EditProfileScreen() {
   const {
     form: { Controller, control, errors, handleSubmit },
-    query: { isPending, submit },
-    mediaPicker: { pickMedia },
+    query: { isEditing, handleEdit },
+    mediaPicker: { handlePickMedia },
     meta: { avatarUri },
   } = useProfile();
 
@@ -31,7 +31,7 @@ export default function EditProfileScreen() {
               <Avatar uri={avatarUri} size={80} />
               <Pressable
                 className="bg-white shadow-lg rounded-full p-[4] absolute -bottom-2 -right-3"
-                onPress={() => pickMedia()}
+                onPress={() => handlePickMedia()}
               >
                 <Icon name="camera-outline" size={20} />
               </Pressable>
@@ -120,9 +120,9 @@ export default function EditProfileScreen() {
 
               <Button
                 text="Update"
-                isLoading={isPending}
+                isLoading={isEditing}
                 onPress={handleSubmit((data: ProfileForm) => {
-                  submit(data);
+                  handleEdit(data);
                 })}
               />
             </View>

@@ -12,14 +12,21 @@ import { PostItem as TPostItem } from "@/types/models";
 import { humanReadableDate } from "@/helpers/date";
 import { isImage } from "@/helpers/image";
 
-import useLike from "@/hooks/useLike";
-import useShare from "@/hooks/useShare";
+import useLikePost from "@/hooks/useLikePost";
+import useSharePost from "@/hooks/useSharePost";
+import useDeletePost from "@/hooks/useDeletePost";
 
 type PostItemProps = {
   post: TPostItem;
   isViewable?: boolean;
   showMoreIcon?: boolean;
-  showActions?: boolean;
+  showActionsIcon?: boolean;
+  onLikeSuccess?: () => void;
+  onLikeError?: (error: Error) => void;
+  onShareSuccess?: () => void;
+  onShareError?: (error: unknown) => void;
+  onDeleteSuccess?: () => void;
+  onDeleteError?: (error: Error) => void;
 };
 
 const shadow = {
@@ -34,10 +41,26 @@ export default function PostItem({
   post,
   isViewable,
   showMoreIcon = true,
-  showActions = false,
+  showActionsIcon = false,
+  onLikeSuccess,
+  onLikeError,
+  onShareSuccess,
+  onShareError,
+  onDeleteSuccess,
+  onDeleteError,
 }: PostItemProps) {
-  const { isLiked, toggleLike } = useLike(post);
-  const { isSharing, share } = useShare(post);
+  const { isLiking, isLiked, handleToggleLike } = useLikePost(post, {
+    onSuccess: onLikeSuccess,
+    onError: onLikeError,
+  });
+  const { isSharing, handleShare } = useSharePost({
+    onSuccess: onShareSuccess,
+    onError: onShareError,
+  });
+  const { isDeleting, handleDelete } = useDeletePost({
+    onSuccess: onDeleteSuccess,
+    onError: onDeleteError,
+  });
 
   return (
     <View
@@ -55,10 +78,15 @@ export default function PostItem({
             <Icon name="ellipsis-horizontal-outline" size={20} />
           </Link>
         )}
-        {showActions && (
+        {showActionsIcon && (
           <View className="flex-row items-center gap-4">
             <Icon name="pencil-outline" />
-            <Icon name="trash-outline" color="crimson" />
+            <Icon
+              name="trash-outline"
+              color="crimson"
+              isLoading={isDeleting}
+              onPress={() => handleDelete(post.id)}
+            />
           </View>
         )}
       </View>
@@ -75,7 +103,8 @@ export default function PostItem({
           <Icon
             name={isLiked ? "heart" : "heart-outline"}
             color={isLiked ? "crimson" : "black"}
-            onPress={toggleLike}
+            isLoading={isLiking}
+            onPress={handleToggleLike}
           />
           <Text>{post.likes.length}</Text>
         </View>
@@ -90,7 +119,7 @@ export default function PostItem({
         <Icon
           name="share-social-outline"
           isLoading={isSharing}
-          onPress={share}
+          onPress={() => handleShare(post)}
         />
       </View>
     </View>

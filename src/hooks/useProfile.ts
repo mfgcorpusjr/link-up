@@ -32,7 +32,7 @@ export type ProfileForm = z.infer<typeof schema>;
 const useProfile = () => {
   const profile = useAuthStore((state) => state.profile);
   const setProfile = useAuthStore((state) => state.setProfile);
-  const { media, pickMedia } = useMediaPicker();
+  const { media, handlePickMedia } = useMediaPicker();
 
   const {
     control,
@@ -44,7 +44,7 @@ const useProfile = () => {
     resolver: zodResolver(schema),
   });
 
-  const { isPending, mutate: submit } = useMutation({
+  const { isPending: isEditing, mutate } = useMutation({
     mutationFn: (data: ProfileForm) => {
       return updateProfile(replaceEmptyWithNull(data), profile?.id || "");
     },
@@ -77,6 +77,8 @@ const useProfile = () => {
   const avatarUri =
     avatar !== null && typeof avatar === "object" ? avatar.uri : avatar;
 
+  const handleEdit = (data: ProfileForm) => mutate(data);
+
   return {
     form: {
       Controller,
@@ -85,11 +87,11 @@ const useProfile = () => {
       handleSubmit,
     },
     query: {
-      isPending,
-      submit,
+      isEditing,
+      handleEdit,
     },
     mediaPicker: {
-      pickMedia,
+      handlePickMedia,
     },
     meta: {
       avatarUri,

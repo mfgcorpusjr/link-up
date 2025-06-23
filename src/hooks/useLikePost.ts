@@ -13,10 +13,19 @@ export type Payload = {
   profile_id: string;
 };
 
-const useLike = (post: PostItem) => {
+type UseLikePostOptions = {
+  onSuccess?: () => void;
+  onError?: (error: Error) => void;
+};
+
+const useLikePost = (
+  post: PostItem,
+  { onSuccess, onError }: UseLikePostOptions = {}
+) => {
+  const profile = useAuthStore((state) => state.profile);
+
   const [isLiked, setIsLiked] = useState(false);
   const [likePayload, setLikePayload] = useState<Payload>();
-  const profile = useAuthStore((state) => state.profile);
 
   useEffect(() => {
     if (profile) {
@@ -25,21 +34,30 @@ const useLike = (post: PostItem) => {
     }
   }, [profile, post]);
 
-  const { mutate } = useMutation({
+  const { isPending: isLiking, mutate } = useMutation({
     mutationFn: () => (isLiked ? unLike(likePayload!) : like(likePayload!)),
-    onSuccess: () => setIsLiked((v) => !v),
+    onSuccess: () => {
+      setIsLiked((v) => !v);
+
+      if (onSuccess) onSuccess();
+    },
     onError: (error) => {
       Snackbar.show({
         text: error.message,
         duration: Snackbar.LENGTH_SHORT,
       });
+
+      if (onError) onError(error);
     },
   });
 
+  const handleToggleLike = () => mutate();
+
   return {
+    isLiking,
     isLiked,
-    toggleLike: () => mutate(),
+    handleToggleLike,
   };
 };
 
-export default useLike;
+export default useLikePost;
