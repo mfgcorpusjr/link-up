@@ -8,17 +8,17 @@ export type UsePostListOption = string | undefined;
 
 const usePostList = (profileId: UsePostListOption = undefined) => {
   const [activePostId, setActivePostId] = useState<number>();
+  const [isRefetching, setIsRefetching] = useState(false);
 
   const {
     data,
     isLoading,
-    refetch,
-    isRefetching,
+    refetch: handleRefetch,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: profileId ? ["posts", profileId] : ["posts"],
+    queryKey: profileId ? ["posts", "profile", profileId] : ["posts"],
     queryFn: ({ pageParam }) => getPosts({ pageParam }, profileId),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) =>
@@ -35,6 +35,12 @@ const usePostList = (profileId: UsePostListOption = undefined) => {
     if (callback.viewableItems.length > 0) {
       setActivePostId(callback.viewableItems[0].item.id);
     }
+  };
+
+  const refetch = async () => {
+    setIsRefetching(true);
+    await handleRefetch();
+    setIsRefetching(false);
   };
 
   return {
