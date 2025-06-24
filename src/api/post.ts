@@ -16,6 +16,7 @@ export const getPost = async (id: number) => {
       "*, profile:profiles(*), likes(*, profile:profiles(*)), comments(*, profile: profiles(*))"
     )
     .eq("id", id)
+    .order("id", { ascending: false, referencedTable: "comments" })
     .single()
     .throwOnError();
 

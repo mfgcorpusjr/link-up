@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { View } from "react-native";
+import { View, FlatList } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
 import ScreenWrapper from "@/components/common/ScreenWrapper";
@@ -7,23 +7,15 @@ import ScreenHeader from "@/components/common/ScreenHeader";
 import BackButton from "@/components/common/BackButton";
 import Loading from "@/components/common/Loading";
 import Error from "@/components/common/Error";
+import ListEmpty from "@/components/common/ListEmpty";
 import PostItem from "@/components/PostItem";
 import CommentForm from "@/components/CommentForm";
+import CommentItem from "@/components/CommentItem";
+import PostDetailsHeader from "@/components/PostDetailsHeader";
 
 import usePostDetails from "@/hooks/usePostDetails";
 
 import useAuthStore from "@/store/useAuthStore";
-
-const Wrapper = ({ children }: PropsWithChildren) => {
-  return (
-    <ScreenWrapper>
-      <View className="gap-10">
-        <ScreenHeader title="Post Details" leftIcon={<BackButton />} />
-        {children}
-      </View>
-    </ScreenWrapper>
-  );
-};
 
 export default function PostDetailsScreen() {
   const { id } = useLocalSearchParams();
@@ -38,22 +30,24 @@ export default function PostDetailsScreen() {
   }
 
   if (error) {
-    return (
-      <Wrapper>
-        <Error text={error.message} />
-      </Wrapper>
-    );
+    return <Error text={error.message} />;
   }
 
   return (
-    <Wrapper>
-      <PostItem
-        post={data}
-        showMoreIcon={false}
-        showActionsIcon={data.profile_id === profile.id}
+    <ScreenWrapper>
+      <FlatList
+        data={data.comments}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => <CommentItem comment={item} />}
+        ListHeaderComponent={
+          <PostDetailsHeader post={data} profile={profile} />
+        }
+        ListEmptyComponent={
+          <ListEmpty text="No comments found" isLoading={isLoading} />
+        }
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="gap-2 p-1"
       />
-
-      <CommentForm postId={Number(id)} />
-    </Wrapper>
+    </ScreenWrapper>
   );
 }

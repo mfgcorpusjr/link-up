@@ -28,6 +28,7 @@ const useCreateComment = (postId: number) => {
     handleSubmit,
     formState: { errors },
     setValue,
+    resetField,
   } = useForm({
     resolver: zodResolver(schema),
   });
@@ -35,7 +36,7 @@ const useCreateComment = (postId: number) => {
   const { isPending: isCreatingComment, mutate } = useMutation({
     mutationFn: (data: CommentForm) => createComment(data),
     onSuccess: () => {
-      setValue("text", "");
+      resetField("text");
       queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
     onError: (error) => {
