@@ -8,6 +8,7 @@ import { getProfile } from "@/api/profile";
 import { Profile } from "@/types/models";
 
 type AuthStore = {
+  isLoading: boolean;
   session: Session | null;
   profile: Profile | null;
   initAuth: () => void;
@@ -15,6 +16,7 @@ type AuthStore = {
 };
 
 const useAuthStore = create<AuthStore>()((set, get) => ({
+  isLoading: true,
   session: null,
   profile: null,
 
@@ -23,12 +25,16 @@ const useAuthStore = create<AuthStore>()((set, get) => ({
       set({ session });
 
       session ? get().setProfile(session.user.id) : set({ profile: null });
+
+      set({ isLoading: false });
     });
 
     supabase.auth.onAuthStateChange((_event, session) => {
       set({ session });
 
       session ? get().setProfile(session.user.id) : set({ profile: null });
+
+      set({ isLoading: false });
     });
   },
 

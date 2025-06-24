@@ -1,13 +1,11 @@
-import { useState, useRef, useCallback } from "react";
-import { FlatList, ViewabilityConfig, ViewToken } from "react-native";
-import { useFocusEffect } from "expo-router";
+import { useState } from "react";
+import { ViewabilityConfig, ViewToken } from "react-native";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { getPosts } from "@/api/post";
 
 const usePostList = () => {
   const [activePostId, setActivePostId] = useState<number>();
-  const flatListRef = useRef<FlatList>(null);
 
   const {
     data,
@@ -24,14 +22,6 @@ const usePostList = () => {
     getNextPageParam: (lastPage, allPages) =>
       lastPage.length < 10 ? undefined : allPages.length * 10,
   });
-
-  useFocusEffect(
-    useCallback(() => {
-      if (flatListRef.current) {
-        flatListRef.current.scrollToOffset({ offset: 0, animated: false });
-      }
-    }, [])
-  );
 
   const viewabilityConfig: ViewabilityConfig = {
     itemVisiblePercentThreshold: 51,
@@ -56,7 +46,6 @@ const usePostList = () => {
       isFetchingNextPage,
     },
     meta: {
-      flatListRef,
       viewabilityConfig,
       handleViewableItemsChanged,
       activePostId,

@@ -32,7 +32,7 @@ export default function ProfileScreen() {
   const session = useAuthStore((state) => state.session);
   const profile = useAuthStore((state) => state.profile);
 
-  if (!profile) {
+  if (!profile || !session) {
     return (
       <Wrapper>
         <Loading />
@@ -62,7 +62,7 @@ export default function ProfileScreen() {
         <View className="gap-4">
           <View className="flex-row items-center gap-4">
             <Icon name="mail-outline" color="grey" />
-            <Text>{session?.user.email}</Text>
+            <Text>{session.user.email}</Text>
           </View>
 
           <View className="flex-row items-center gap-4">

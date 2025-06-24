@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase";
 
-import { Payload } from "@/hooks/usePostItem";
+import { Payload } from "@/hooks/useLike";
 
 export const like = async (payload: Payload) => {
   await supabase.from("likes").insert(payload).throwOnError();

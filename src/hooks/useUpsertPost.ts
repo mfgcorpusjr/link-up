@@ -26,7 +26,7 @@ const schema = z.object({
 
 export type PostForm = z.infer<typeof schema>;
 
-const useUpsertPost = (id: string | undefined) => {
+const useUpsertPost = (id: number | undefined) => {
   const profile = useAuthStore((state) => state.profile);
   const { media, handlePickMedia } = useMediaPicker();
   const queryClient = useQueryClient();
@@ -49,14 +49,12 @@ const useUpsertPost = (id: string | undefined) => {
 
   const { data } = useQuery({
     queryKey: ["posts", id],
-    queryFn: () => getPost(Number(id)),
+    queryFn: () => getPost(id!),
     enabled: !!id,
   });
 
-  const { isPending, mutate: submit } = useMutation({
-    mutationFn: (data: PostForm) => {
-      return upsertPost(data);
-    },
+  const { isPending, mutate } = useMutation({
+    mutationFn: (data: PostForm) => upsertPost(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       router.back();
@@ -70,15 +68,11 @@ const useUpsertPost = (id: string | undefined) => {
   });
 
   useEffect(() => {
-    if (profile) {
-      setValue("profile_id", profile.id);
-    }
+    if (profile) setValue("profile_id", profile.id);
   }, [profile]);
 
   useEffect(() => {
-    if (media) {
-      setValue("file", { uri: media.uri, mimeType: media.mimeType! });
-    }
+    if (media) setValue("file", { uri: media.uri, mimeType: media.mimeType! });
   }, [media]);
 
   useEffect(() => {
@@ -94,11 +88,10 @@ const useUpsertPost = (id: string | undefined) => {
       control,
       errors,
       handleSubmit,
-      removeFile: () => setValue("file", null),
     },
     query: {
       isPending,
-      submit,
+      handleSave: mutate,
     },
     mediaPicker: {
       handlePickMedia,
@@ -107,6 +100,7 @@ const useUpsertPost = (id: string | undefined) => {
       profile,
       fileUri,
       isImageFile: isImage(file),
+      removeFile: () => setValue("file", null),
     },
   };
 };

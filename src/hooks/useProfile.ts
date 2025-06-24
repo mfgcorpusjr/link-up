@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { router } from "expo-router";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { z } from "zod";
@@ -14,6 +14,7 @@ import { updateProfile } from "@/api/profile";
 import { replaceEmptyWithNull } from "@/helpers/data";
 
 const schema = z.object({
+  id: z.string({ required_error: "ID is required" }),
   avatar: z.union([
     z.string(),
     z.null(),
@@ -30,6 +31,7 @@ const schema = z.object({
 export type ProfileForm = z.infer<typeof schema>;
 
 const useProfile = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const profile = useAuthStore((state) => state.profile);
   const setProfile = useAuthStore((state) => state.setProfile);
   const { media, handlePickMedia } = useMediaPicker();
@@ -46,7 +48,7 @@ const useProfile = () => {
 
   const { isPending: isEditing, mutate } = useMutation({
     mutationFn: (data: ProfileForm) => {
-      return updateProfile(replaceEmptyWithNull(data), profile?.id || "");
+      return updateProfile(replaceEmptyWithNull(data));
     },
     onSuccess: (data) => {
       setProfile(data.id);
@@ -62,8 +64,8 @@ const useProfile = () => {
 
   useEffect(() => {
     if (profile) {
-      const { avatar, name, phone_number, location, bio } = profile;
-      reset({ avatar, name, phone_number, location, bio });
+      reset(profile);
+      setIsLoading(false);
     }
   }, [profile]);
 
@@ -77,8 +79,6 @@ const useProfile = () => {
   const avatarUri =
     avatar !== null && typeof avatar === "object" ? avatar.uri : avatar;
 
-  const handleEdit = (data: ProfileForm) => mutate(data);
-
   return {
     form: {
       Controller,
@@ -88,12 +88,13 @@ const useProfile = () => {
     },
     query: {
       isEditing,
-      handleEdit,
+      handleEdit: mutate,
     },
     mediaPicker: {
       handlePickMedia,
     },
     meta: {
+      isLoading,
       avatarUri,
     },
   };

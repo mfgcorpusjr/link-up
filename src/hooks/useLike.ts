@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import Snackbar from "react-native-snackbar";
 
 import { like, unLike } from "@/api/like";
@@ -13,16 +13,7 @@ export type Payload = {
   profile_id: string;
 };
 
-type UseLikePostOptions = {
-  onSuccess?: () => void;
-  onError?: (error: Error) => void;
-};
-
-const useLikePost = (
-  post: PostItem,
-  { onSuccess, onError }: UseLikePostOptions = {}
-) => {
-  const queryClient = useQueryClient();
+const useLike = (post: PostItem) => {
   const profile = useAuthStore((state) => state.profile);
 
   const [isLiked, setIsLiked] = useState(false);
@@ -39,27 +30,20 @@ const useLikePost = (
     mutationFn: () => (isLiked ? unLike(likePayload!) : like(likePayload!)),
     onSuccess: () => {
       setIsLiked((v) => !v);
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-
-      if (onSuccess) onSuccess();
     },
     onError: (error) => {
       Snackbar.show({
         text: error.message,
         duration: Snackbar.LENGTH_SHORT,
       });
-
-      if (onError) onError(error);
     },
   });
-
-  const handleToggleLike = () => mutate();
 
   return {
     isLiking,
     isLiked,
-    handleToggleLike,
+    handleToggleLike: () => mutate(),
   };
 };
 
-export default useLikePost;
+export default useLike;

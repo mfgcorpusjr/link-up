@@ -11,15 +11,15 @@ import VideoPreview from "@/components/VideoPreview";
 import useUpsertPost, { PostForm as TPostForm } from "@/hooks/useUpsertPost";
 
 type PostFormProps = {
-  id?: string;
+  id?: number;
 };
 
 export default function PostForm({ id }: PostFormProps) {
   const {
-    form: { Controller, control, errors, handleSubmit, removeFile },
-    query: { isPending, submit },
+    form: { Controller, control, errors, handleSubmit },
+    query: { isPending, handleSave },
     mediaPicker: { handlePickMedia },
-    meta: { profile, fileUri, isImageFile },
+    meta: { profile, fileUri, isImageFile, removeFile },
   } = useUpsertPost(id);
 
   return (
@@ -85,7 +85,7 @@ export default function PostForm({ id }: PostFormProps) {
         text="Post"
         isLoading={isPending}
         onPress={handleSubmit((data: TPostForm) => {
-          submit(data);
+          handleSave(data);
         })}
       />
     </View>

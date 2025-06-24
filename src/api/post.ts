@@ -8,6 +8,19 @@ import { PostItem } from "@/types/models";
 
 import { isImage } from "@/helpers/image";
 
+export const getPost = async (id: number) => {
+  const { data } = await supabase
+    .from("posts")
+    .select(
+      "*, profile:profiles(*), likes(*, profile:profiles(*)), comments(*, profile: profiles(*))"
+    )
+    .eq("id", id)
+    .single()
+    .throwOnError();
+
+  return data;
+};
+
 export const getPosts = async ({ pageParam = 0 }): Promise<PostItem[]> => {
   const { data } = await supabase
     .from("posts")
@@ -30,19 +43,6 @@ export const upsertPost = async (form: PostForm) => {
   }
 
   await supabase.from("posts").upsert(form).throwOnError();
-};
-
-export const getPost = async (id: number) => {
-  const { data } = await supabase
-    .from("posts")
-    .select(
-      "*, profile:profiles(*), likes(*, profile:profiles(*)), comments(*, profile: profiles(*))"
-    )
-    .eq("id", id)
-    .single()
-    .throwOnError();
-
-  return data;
 };
 
 export const deletePost = async (id: number) => {

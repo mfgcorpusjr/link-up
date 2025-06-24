@@ -15,7 +15,7 @@ export const getProfile = async (id: string) => {
   return data;
 };
 
-export const updateProfile = async (form: ProfileForm, id: string) => {
+export const updateProfile = async (form: ProfileForm) => {
   if (form.avatar !== null && typeof form.avatar === "object") {
     const path = "avatars/" + form.avatar.uri.split("/").pop();
     const fileUri = await uploadFile("uploads", path, form.avatar);
@@ -25,7 +25,7 @@ export const updateProfile = async (form: ProfileForm, id: string) => {
   const { data } = await supabase
     .from("profiles")
     .update(form)
-    .eq("id", id)
+    .eq("id", form.id)
     .select()
     .single()
     .throwOnError();

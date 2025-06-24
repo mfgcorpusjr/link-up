@@ -25,12 +25,7 @@ export default function HomeScreen() {
       fetchNextPage,
       isFetchingNextPage,
     },
-    meta: {
-      flatListRef,
-      viewabilityConfig,
-      handleViewableItemsChanged,
-      activePostId,
-    },
+    meta: { viewabilityConfig, handleViewableItemsChanged, activePostId },
   } = usePostList();
 
   return (
@@ -39,7 +34,6 @@ export default function HomeScreen() {
         <HomeHeader />
 
         <FlatList
-          ref={flatListRef}
           data={data?.pages.flat() || []}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (

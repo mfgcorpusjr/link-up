@@ -16,7 +16,7 @@ export default function EditPostScreen() {
         <View className="gap-10">
           <ScreenHeader title="Edit Post" leftIcon={<BackButton />} />
 
-          <PostForm id={id} />
+          <PostForm id={Number(id)} />
         </View>
       </KeyboardAvoidingScrollView>
     </ScreenWrapper>

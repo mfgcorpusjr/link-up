@@ -12,8 +12,8 @@ import { PostItem as TPostItem } from "@/types/models";
 import { humanReadableDate } from "@/helpers/date";
 import { isImage } from "@/helpers/image";
 
-import useLikePost from "@/hooks/useLikePost";
-import useSharePost from "@/hooks/useSharePost";
+import useLike from "@/hooks/useLike";
+import useShare from "@/hooks/useShare";
 import useDeletePost from "@/hooks/useDeletePost";
 
 type PostItemProps = {
@@ -21,10 +21,6 @@ type PostItemProps = {
   isViewable?: boolean;
   showMoreIcon?: boolean;
   showActionsIcon?: boolean;
-  onLikeSuccess?: () => void;
-  onLikeError?: (error: Error) => void;
-  onShareSuccess?: () => void;
-  onShareError?: (error: unknown) => void;
   onDeleteSuccess?: () => void;
   onDeleteError?: (error: Error) => void;
 };
@@ -42,21 +38,11 @@ export default function PostItem({
   isViewable,
   showMoreIcon = true,
   showActionsIcon = false,
-  onLikeSuccess,
-  onLikeError,
-  onShareSuccess,
-  onShareError,
   onDeleteSuccess,
   onDeleteError,
 }: PostItemProps) {
-  const { isLiking, isLiked, handleToggleLike } = useLikePost(post, {
-    onSuccess: onLikeSuccess,
-    onError: onLikeError,
-  });
-  const { isSharing, handleShare } = useSharePost({
-    onSuccess: onShareSuccess,
-    onError: onShareError,
-  });
+  const { isLiking, isLiked, handleToggleLike } = useLike(post);
+  const { isSharing, handleShare } = useShare();
   const { isDeleting, handleDelete } = useDeletePost({
     onSuccess: onDeleteSuccess,
     onError: onDeleteError,

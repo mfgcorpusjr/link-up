@@ -1,8 +1,10 @@
 import { PropsWithChildren } from "react";
+import { View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 
 import ScreenWrapper from "@/components/common/ScreenWrapper";
-import Icon from "@/components/common/Icon";
+import ScreenHeader from "@/components/common/ScreenHeader";
+import BackButton from "@/components/common/BackButton";
 import Loading from "@/components/common/Loading";
 import Error from "@/components/common/Error";
 import PostItem from "@/components/PostItem";
@@ -14,8 +16,10 @@ import useAuthStore from "@/store/useAuthStore";
 const Wrapper = ({ children }: PropsWithChildren) => {
   return (
     <ScreenWrapper>
-      <Icon name="close-outline" size={32} onPress={() => router.back()} />
-      {children}
+      <View className="gap-10">
+        <ScreenHeader title="Post Details" leftIcon={<BackButton />} />
+        {children}
+      </View>
     </ScreenWrapper>
   );
 };
