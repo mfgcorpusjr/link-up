@@ -8,6 +8,7 @@ import BackButton from "@/components/common/BackButton";
 import Loading from "@/components/common/Loading";
 import Error from "@/components/common/Error";
 import PostItem from "@/components/PostItem";
+import CommentForm from "@/components/CommentForm";
 
 import usePostDetails from "@/hooks/usePostDetails";
 
@@ -51,6 +52,8 @@ export default function PostDetailsScreen() {
         showMoreIcon={false}
         showActionsIcon={data.profile_id === profile.id}
       />
+
+      <CommentForm postId={Number(id)} />
     </Wrapper>
   );
 }
