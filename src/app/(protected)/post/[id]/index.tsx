@@ -42,6 +42,7 @@ export default function PostDetailsScreen() {
         ListHeaderComponent={
           <PostDetailsHeader post={data} profile={profile} />
         }
+        ItemSeparatorComponent={() => <View className="h-2" />}
         ListEmptyComponent={
           <ListEmpty text="No comments found" isLoading={isLoading} />
         }
