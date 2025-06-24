@@ -2,6 +2,7 @@ import { View, Pressable } from "react-native";
 
 import Avatar from "@/components/common/Avatar";
 import Icon from "@/components/common/Icon";
+import Loading from "@/components/common/Loading";
 import Text from "@/components/ui/Text";
 import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
@@ -19,15 +20,19 @@ export default function PostForm({ id }: PostFormProps) {
     form: { Controller, control, errors, handleSubmit },
     query: { isPending, handleSave },
     mediaPicker: { handlePickMedia },
-    meta: { profile, fileUri, isImageFile, removeFile },
+    meta: { profile, isLoading, fileUri, isImageFile, removeFile },
   } = useUpsertPost(id);
+
+  if (!profile || isLoading) {
+    return <Loading />;
+  }
 
   return (
     <View className="gap-8">
       <View className="flex-row items-center gap-4">
-        <Avatar uri={profile?.avatar || null} size={60} />
+        <Avatar uri={profile.avatar || null} size={60} />
         <View>
-          <Text variant="headline">{profile?.name}</Text>
+          <Text variant="headline">{profile.name}</Text>
           <Text variant="caption">Public</Text>
         </View>
       </View>

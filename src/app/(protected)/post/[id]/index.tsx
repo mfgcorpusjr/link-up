@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 import { View } from "react-native";
-import { useLocalSearchParams, router } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 
 import ScreenWrapper from "@/components/common/ScreenWrapper";
 import ScreenHeader from "@/components/common/ScreenHeader";
@@ -25,18 +25,15 @@ const Wrapper = ({ children }: PropsWithChildren) => {
 };
 
 export default function PostDetailsScreen() {
-  const profile = useAuthStore((state) => state.profile);
   const { id } = useLocalSearchParams();
+  const profile = useAuthStore((state) => state.profile);
+
   const {
     query: { isLoading, data, error },
   } = usePostDetails(Number(id));
 
   if (isLoading || !profile) {
-    return (
-      <Wrapper>
-        <Loading />
-      </Wrapper>
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -53,7 +50,6 @@ export default function PostDetailsScreen() {
         post={data}
         showMoreIcon={false}
         showActionsIcon={data.profile_id === profile.id}
-        onDeleteSuccess={() => router.back()}
       />
     </Wrapper>
   );

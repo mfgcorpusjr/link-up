@@ -16,6 +16,10 @@ export default function ProfileScreen() {
   const session = useAuthStore((state) => state.session);
   const profile = useAuthStore((state) => state.profile);
 
+  if (!session || !profile) {
+    return <Loading />;
+  }
+
   const {
     query: {
       data,
@@ -26,12 +30,8 @@ export default function ProfileScreen() {
       fetchNextPage,
       isFetchingNextPage,
     },
-    meta: { viewabilityConfig, handleViewableItemsChanged, activePostId },
-  } = usePostList(profile?.id);
-
-  if (!profile || !session) {
-    return <Loading />;
-  }
+    meta: { activePostId, viewabilityConfig, handleViewableItemsChanged },
+  } = usePostList(profile.id);
 
   return (
     <ScreenWrapper>
@@ -53,7 +53,7 @@ export default function ProfileScreen() {
           if (hasNextPage && !isFetchingNextPage) fetchNextPage();
         }}
         ListHeaderComponent={
-          <ProfileHeader profile={profile} session={session} />
+          <ProfileHeader session={session} profile={profile} />
         }
         ListFooterComponent={
           isFetchingNextPage ? (

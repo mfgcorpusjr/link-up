@@ -47,7 +47,7 @@ const useUpsertPost = (id: number | undefined) => {
     },
   });
 
-  const { data } = useQuery({
+  const { isLoading, data } = useQuery({
     queryKey: ["posts", id],
     queryFn: () => getPost(id!),
     enabled: !!id,
@@ -98,6 +98,7 @@ const useUpsertPost = (id: number | undefined) => {
     },
     meta: {
       profile,
+      isLoading,
       fileUri,
       isImageFile: isImage(file),
       removeFile: () => setValue("file", null),

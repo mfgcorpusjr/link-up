@@ -7,22 +7,20 @@ import Text from "@/components/ui/Text";
 import ImagePreview from "@/components/ImagePreview";
 import VideoPreview from "@/components/VideoPreview";
 
+import useLike from "@/hooks/useLike";
+import useShare from "@/hooks/useShare";
+import useDeletePost from "@/hooks/useDeletePost";
+
 import { PostItem as TPostItem } from "@/types/models";
 
 import { humanReadableDate } from "@/helpers/date";
 import { isImage } from "@/helpers/image";
-
-import useLike from "@/hooks/useLike";
-import useShare from "@/hooks/useShare";
-import useDeletePost from "@/hooks/useDeletePost";
 
 type PostItemProps = {
   post: TPostItem;
   isViewable?: boolean;
   showMoreIcon?: boolean;
   showActionsIcon?: boolean;
-  onDeleteSuccess?: () => void;
-  onDeleteError?: (error: Error) => void;
 };
 
 const shadow = {
@@ -37,16 +35,11 @@ export default function PostItem({
   post,
   isViewable,
   showMoreIcon = true,
-  showActionsIcon = false,
-  onDeleteSuccess,
-  onDeleteError,
+  showActionsIcon,
 }: PostItemProps) {
   const { isLiking, isLiked, handleToggleLike } = useLike(post);
   const { isSharing, handleShare } = useShare();
-  const { isDeleting, handleDelete } = useDeletePost({
-    onSuccess: onDeleteSuccess,
-    onError: onDeleteError,
-  });
+  const { isDeleting, handleDelete } = useDeletePost();
 
   return (
     <View

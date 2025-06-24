@@ -25,7 +25,7 @@ export default function HomeScreen() {
       fetchNextPage,
       isFetchingNextPage,
     },
-    meta: { viewabilityConfig, handleViewableItemsChanged, activePostId },
+    meta: { activePostId, viewabilityConfig, handleViewableItemsChanged },
   } = usePostList();
 
   return (
@@ -34,7 +34,7 @@ export default function HomeScreen() {
         <HomeHeader />
 
         <FlatList
-          data={data?.pages.flat() || []}
+          data={data?.pages.flat()}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <PostItem post={item} isViewable={item.id === activePostId} />

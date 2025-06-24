@@ -54,9 +54,9 @@ const usePostList = (profileId: UsePostListOption = undefined) => {
       isFetchingNextPage,
     },
     meta: {
+      activePostId,
       viewabilityConfig,
       handleViewableItemsChanged,
-      activePostId,
     },
   };
 };

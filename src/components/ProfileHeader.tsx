@@ -12,13 +12,13 @@ import Text from "@/components/ui/Text";
 import { Profile } from "@/types/models";
 
 type ProfileHeaderProps = {
-  profile: Profile;
   session: Session;
+  profile: Profile;
 };
 
 export default function ProfileHeader({
-  profile,
   session,
+  profile,
 }: ProfileHeaderProps) {
   return (
     <View className="gap-10">
@@ -27,6 +27,7 @@ export default function ProfileHeader({
         leftIcon={<BackButton />}
         rightIcon={<LogoutButton />}
       />
+
       <View className="gap-8">
         <View className="items-center">
           <View>
