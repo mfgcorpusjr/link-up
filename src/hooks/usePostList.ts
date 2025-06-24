@@ -4,7 +4,9 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { getPosts } from "@/api/post";
 
-const usePostList = () => {
+export type UsePostListOption = string | undefined;
+
+const usePostList = (profileId: UsePostListOption = undefined) => {
   const [activePostId, setActivePostId] = useState<number>();
 
   const {
@@ -16,8 +18,8 @@ const usePostList = () => {
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["posts"],
-    queryFn: getPosts,
+    queryKey: profileId ? ["posts", profileId] : ["posts"],
+    queryFn: ({ pageParam }) => getPosts({ pageParam }, profileId),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) =>
       lastPage.length < 10 ? undefined : allPages.length * 10,

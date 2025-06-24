@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { uploadFile } from "@/api/storage";
 
 import { PostForm } from "@/hooks/useUpsertPost";
+import { UsePostListOption } from "@/hooks/usePostList";
 
 import { PostItem } from "@/types/models";
 
@@ -21,15 +22,23 @@ export const getPost = async (id: number) => {
   return data;
 };
 
-export const getPosts = async ({ pageParam = 0 }): Promise<PostItem[]> => {
-  const { data } = await supabase
+export const getPosts = async (
+  { pageParam = 0 },
+  profileId: UsePostListOption
+): Promise<PostItem[]> => {
+  let query = supabase
     .from("posts")
     .select(
       "*, profile:profiles(*), likes(*, profile:profiles(*)), comments(*, profile: profiles(*))"
     )
     .order("id", { ascending: false })
-    .range(pageParam, pageParam + 10 - 1)
-    .throwOnError();
+    .range(pageParam, pageParam + 10 - 1);
+
+  if (profileId) {
+    query = query.eq("profile_id", profileId);
+  }
+
+  const { data } = await query.throwOnError();
 
   return data;
 };
