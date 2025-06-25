@@ -35,8 +35,8 @@ export type Notification = {
   id: number;
   sender_id: string;
   receiver_id: string;
+  post_id: number;
   title: string;
-  data: string;
   is_read: boolean;
   created_at: Date;
 };

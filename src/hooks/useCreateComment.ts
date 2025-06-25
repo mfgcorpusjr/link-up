@@ -9,6 +9,10 @@ import { createComment } from "@/api/comment";
 
 import useAuthStore from "@/store/useAuthStore";
 
+import useNotification from "@/hooks/useNotification";
+
+import { PostItem } from "@/types/models";
+
 const schema = z.object({
   post_id: z.number({ required_error: "Post ID is required" }),
   profile_id: z.string({ required_error: "Profile ID is required" }),
@@ -19,8 +23,9 @@ const schema = z.object({
 
 export type CommentForm = z.infer<typeof schema>;
 
-const useCreateComment = (postId: number) => {
+const useCreateComment = (post: PostItem) => {
   const profile = useAuthStore((state) => state.profile);
+  const { handleCreateNotification } = useNotification();
   const queryClient = useQueryClient();
 
   const {
@@ -38,6 +43,15 @@ const useCreateComment = (postId: number) => {
     onSuccess: () => {
       resetField("text");
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+
+      if (profile && post.profile_id !== profile.id) {
+        handleCreateNotification({
+          sender_id: profile.id,
+          receiver_id: post.profile_id,
+          post_id: post.id,
+          title: "commented on your post",
+        });
+      }
     },
     onError: (error) => {
       Snackbar.show({
@@ -48,11 +62,11 @@ const useCreateComment = (postId: number) => {
   });
 
   useEffect(() => {
-    if (postId && profile) {
-      setValue("post_id", postId);
+    if (post && profile) {
+      setValue("post_id", post.id);
       setValue("profile_id", profile.id);
     }
-  }, [postId, profile]);
+  }, [post, profile]);
 
   return {
     form: {

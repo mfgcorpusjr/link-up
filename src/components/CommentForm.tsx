@@ -9,17 +9,19 @@ import useCreateComment, {
   CommentForm as TCommentForm,
 } from "@/hooks/useCreateComment";
 
+import { PostItem } from "@/types/models";
+
 import colors from "@/constants/colors";
 
 type CommentFormProps = {
-  postId: number;
+  post: PostItem;
 };
 
-export default function CommentForm({ postId }: CommentFormProps) {
+export default function CommentForm({ post }: CommentFormProps) {
   const {
     form: { Controller, control, errors, handleSubmit },
     query: { isCreatingComment, handleCreateComment },
-  } = useCreateComment(postId);
+  } = useCreateComment(post);
 
   return (
     <View className="flex-row gap-4">

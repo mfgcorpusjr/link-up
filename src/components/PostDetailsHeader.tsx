@@ -26,7 +26,7 @@ export default function PostDetailsHeader({
         showActionsIcon={post.profile_id === profile.id}
       />
 
-      <CommentForm postId={post.id} />
+      <CommentForm post={post} />
     </View>
   );
 }
