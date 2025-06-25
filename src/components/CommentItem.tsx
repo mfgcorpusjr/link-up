@@ -12,9 +12,13 @@ import { humanReadableDate } from "@/helpers/date";
 
 type CommentItemProps = {
   comment: CommentWithProfile;
+  showActionIcon?: boolean;
 };
 
-export default function CommentItem({ comment }: CommentItemProps) {
+export default function CommentItem({
+  comment,
+  showActionIcon,
+}: CommentItemProps) {
   const { isDeleting, handleDelete } = useDeleteComment();
 
   return (
@@ -28,12 +32,14 @@ export default function CommentItem({ comment }: CommentItemProps) {
             <Text>{comment.text}</Text>
           </View>
 
-          <Icon
-            name="trash-outline"
-            color="crimson"
-            isLoading={isDeleting}
-            onPress={() => handleDelete(comment.id)}
-          />
+          {showActionIcon && (
+            <Icon
+              name="trash-outline"
+              color="crimson"
+              isLoading={isDeleting}
+              onPress={() => handleDelete(comment.id)}
+            />
+          )}
         </View>
 
         <Text variant="caption" className="px-3">

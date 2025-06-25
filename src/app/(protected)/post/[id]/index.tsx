@@ -38,7 +38,12 @@ export default function PostDetailsScreen() {
       <FlatList
         data={data.comments}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <CommentItem comment={item} />}
+        renderItem={({ item }) => (
+          <CommentItem
+            comment={item}
+            showActionIcon={item.profile_id === profile.id}
+          />
+        )}
         ListHeaderComponent={
           <PostDetailsHeader post={data} profile={profile} />
         }
