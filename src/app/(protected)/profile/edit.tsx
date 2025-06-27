@@ -6,7 +6,6 @@ import ScreenHeader from "@/components/common/ScreenHeader";
 import BackButton from "@/components/common/BackButton";
 import Avatar from "@/components/common/Avatar";
 import Icon from "@/components/common/Icon";
-import Loading from "@/components/common/Loading";
 import Text from "@/components/ui/Text";
 import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
@@ -15,15 +14,12 @@ import useProfile, { ProfileForm } from "@/hooks/useProfile";
 
 export default function EditProfileScreen() {
   const {
-    form: { Controller, control, errors, handleSubmit },
-    query: { isEditing, handleEdit },
-    mediaPicker: { handlePickMedia },
-    meta: { isLoading, avatarUri },
+    form: { Controller, control, handleSubmit, errors },
+    update,
+    isLoading,
+    mediaPicker: { pickMedia },
+    metadata: { avatarUri },
   } = useProfile();
-
-  if (isLoading) {
-    return <Loading />;
-  }
 
   return (
     <ScreenWrapper className="pb-4">
@@ -36,7 +32,7 @@ export default function EditProfileScreen() {
               <Avatar uri={avatarUri} size={80} />
               <Pressable
                 className="bg-white shadow-lg rounded-full p-[4] absolute -bottom-2 -right-3"
-                onPress={() => handlePickMedia()}
+                onPress={() => pickMedia()}
               >
                 <Icon name="camera-outline" size={20} />
               </Pressable>
@@ -125,9 +121,9 @@ export default function EditProfileScreen() {
 
               <Button
                 text="Update"
-                isLoading={isEditing}
+                isLoading={isLoading}
                 onPress={handleSubmit((data: ProfileForm) => {
-                  handleEdit(data);
+                  update(data);
                 })}
               />
             </View>

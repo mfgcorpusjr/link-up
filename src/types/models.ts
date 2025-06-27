@@ -36,6 +36,8 @@ export type Notification = {
   sender_id: string;
   receiver_id: string;
   post_id: number;
+  comment_id: number | null;
+  like_id: number | null;
   title: string;
   is_read: boolean;
   created_at: Date;
@@ -45,15 +47,19 @@ export type PostWithProfile = Post & {
   profile: Profile;
 };
 
-export type LikeWithProfile = Like & {
-  profile: Profile;
-};
-
 export type CommentWithProfile = Comment & {
   profile: Profile;
 };
 
+export type LikeWithProfile = Like & {
+  profile: Profile;
+};
+
 export type PostItem = PostWithProfile & {
-  likes: LikeWithProfile[];
   comments: CommentWithProfile[];
+  likes: LikeWithProfile[];
+};
+
+export type NotificationWithSender = Notification & {
+  sender: Profile;
 };

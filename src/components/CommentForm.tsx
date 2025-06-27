@@ -5,9 +5,7 @@ import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
 import Text from "@/components/ui/Text";
 
-import useCreateComment, {
-  CommentForm as TCommentForm,
-} from "@/hooks/useCreateComment";
+import useComment, { CommentForm as TCommentForm } from "@/hooks/useComment";
 
 import { PostItem } from "@/types/models";
 
@@ -19,9 +17,10 @@ type CommentFormProps = {
 
 export default function CommentForm({ post }: CommentFormProps) {
   const {
-    form: { Controller, control, errors, handleSubmit },
-    query: { isCreatingComment, handleCreateComment },
-  } = useCreateComment(post);
+    form: { Controller, control, handleSubmit, errors },
+    create,
+    isCreating,
+  } = useComment(post);
 
   return (
     <View className="flex-row gap-4">
@@ -48,10 +47,8 @@ export default function CommentForm({ post }: CommentFormProps) {
         containerClassName="w-14"
         variant="outlined"
         icon={<Icon name="send-outline" color={colors.tint} />}
-        isLoading={isCreatingComment}
-        onPress={handleSubmit((data: TCommentForm) =>
-          handleCreateComment(data)
-        )}
+        isLoading={isCreating}
+        onPress={handleSubmit((data: TCommentForm) => create(data))}
       />
     </View>
   );

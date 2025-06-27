@@ -1,15 +1,28 @@
 import { supabase } from "@/lib/supabase";
 
-import { Payload } from "@/hooks/useLike";
+import { Like } from "@/types/models";
+
+export type Payload = Pick<Like, "post_id" | "profile_id">;
 
 export const like = async (payload: Payload) => {
-  await supabase.from("likes").insert(payload).throwOnError();
+  const { data } = await supabase
+    .from("likes")
+    .insert(payload)
+    .select()
+    .single()
+    .throwOnError();
+
+  return data;
 };
 
-export const unLike = async (payload: Payload) => {
-  await supabase
+export const unlike = async ({ post_id, profile_id }: Payload) => {
+  const { data } = await supabase
     .from("likes")
     .delete()
-    .match({ post_id: payload.post_id, profile_id: payload.profile_id })
+    .match({ post_id, profile_id })
+    .select()
+    .single()
     .throwOnError();
+
+  return data;
 };

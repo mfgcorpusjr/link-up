@@ -2,11 +2,22 @@ import { decode } from "base64-arraybuffer";
 
 import { supabase } from "@/lib/supabase";
 
-import { convertFileUriToBase64 } from "@/helpers/image";
-
 import { File } from "@/types/common";
 
-export const uploadFile = async (bucket: string, path: string, file: File) => {
+import { convertFileUriToBase64 } from "@/helpers/image";
+
+type UploadFile = {
+  bucket: string;
+  path: string;
+  file: File;
+};
+
+type GetPublicUrl = {
+  bucket: string;
+  path: string;
+};
+
+export const uploadFile = async ({ bucket, path, file }: UploadFile) => {
   const base64 = await convertFileUriToBase64(file.uri);
 
   const { error } = await supabase.storage
@@ -17,10 +28,10 @@ export const uploadFile = async (bucket: string, path: string, file: File) => {
 
   if (error) throw new Error(error.message);
 
-  return getPublicUrl(bucket, path);
+  return getPublicUrl({ bucket, path });
 };
 
-export const getPublicUrl = (bucket: string, path: string) => {
+export const getPublicUrl = ({ bucket, path }: GetPublicUrl) => {
   const { data } = supabase.storage.from(bucket).getPublicUrl(path);
 
   return data.publicUrl;

@@ -7,19 +7,23 @@ import Snackbar from "react-native-snackbar";
 import { signUp } from "@/api/auth";
 
 const schema = z.object({
-  name: z.string({
-    required_error: "Name is required",
-  }),
+  name: z
+    .string({
+      required_error: "Name is required",
+    })
+    .trim(),
   email: z
     .string({
       required_error: "Email is required",
     })
-    .email("Invalid email format"),
+    .email("Invalid email format")
+    .trim(),
   password: z
     .string({
       required_error: "Password is required",
     })
-    .min(6, "Password must be at least 6 characters long"),
+    .min(6, "Password must be at least 6 characters long")
+    .trim(),
 });
 
 export type SignUpForm = z.infer<typeof schema>;
@@ -34,15 +38,15 @@ const useSignUp = () => {
     resolver: zodResolver(schema),
   });
 
-  const { isPending: isSigningUp, mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: signUp,
     onError: (error) => {
+      reset();
+
       Snackbar.show({
         text: error.message,
         duration: Snackbar.LENGTH_SHORT,
       });
-
-      reset();
     },
   });
 
@@ -50,13 +54,11 @@ const useSignUp = () => {
     form: {
       Controller,
       control,
-      errors,
       handleSubmit,
+      errors,
     },
-    query: {
-      isSigningUp,
-      handleSignUp: mutate,
-    },
+    signUp: mutate,
+    isLoading: isPending,
   };
 };
 

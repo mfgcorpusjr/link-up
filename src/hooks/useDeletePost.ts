@@ -3,13 +3,13 @@ import { router } from "expo-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Snackbar from "react-native-snackbar";
 
-import { deletePost } from "@/api/post";
+import { _delete } from "@/api/post";
 
 const useDeletePost = () => {
   const queryClient = useQueryClient();
 
-  const { isPending: isDeleting, mutate } = useMutation({
-    mutationFn: (postId: number) => deletePost(postId),
+  const { mutate, isPending } = useMutation({
+    mutationFn: (postId: number) => _delete(postId),
     onSuccess: () => {
       Snackbar.show({
         text: "Post deleted",
@@ -18,9 +18,9 @@ const useDeletePost = () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       router.back();
     },
-    onError: (error: Error) => {
+    onError: (error) => {
       Snackbar.show({
-        text: error.message || "Failed to delete post",
+        text: error.message,
         duration: Snackbar.LENGTH_SHORT,
       });
     },
@@ -34,8 +34,8 @@ const useDeletePost = () => {
   };
 
   return {
-    isDeleting,
-    handleDelete,
+    delete: handleDelete,
+    isLoading: isPending,
   };
 };
 

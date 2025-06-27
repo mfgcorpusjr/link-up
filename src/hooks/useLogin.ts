@@ -11,10 +11,13 @@ const schema = z.object({
     .string({
       required_error: "Email is required",
     })
-    .email("Invalid email format"),
-  password: z.string({
-    required_error: "Password is required",
-  }),
+    .email("Invalid email format")
+    .trim(),
+  password: z
+    .string({
+      required_error: "Password is required",
+    })
+    .trim(),
 });
 
 export type LoginForm = z.infer<typeof schema>;
@@ -29,15 +32,15 @@ const useLogin = () => {
     resolver: zodResolver(schema),
   });
 
-  const { isPending: isLoggingIn, mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: login,
     onError: (error) => {
+      reset();
+
       Snackbar.show({
         text: error.message,
         duration: Snackbar.LENGTH_SHORT,
       });
-
-      reset();
     },
   });
 
@@ -45,13 +48,11 @@ const useLogin = () => {
     form: {
       Controller,
       control,
-      errors,
       handleSubmit,
+      errors,
     },
-    query: {
-      isLoggingIn,
-      handleLogin: mutate,
-    },
+    login: mutate,
+    isLoading: isPending,
   };
 };
 

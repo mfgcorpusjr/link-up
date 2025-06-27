@@ -1,29 +1,35 @@
 import { supabase } from "@/lib/supabase";
 
-import { SignUpForm } from "@/hooks/useSignUp";
-import { LoginForm } from "@/hooks/useLogin";
-
-export const signUp = async (form: SignUpForm) => {
-  const { error } = await supabase.auth.signUp({
-    ...form,
-    options: {
-      data: {
-        name: form.name,
-      },
-    },
-  });
-
-  if (error) throw new Error(error.message);
+type Login = {
+  email: string;
+  password: string;
 };
 
-export const login = async (form: LoginForm) => {
-  const { error } = await supabase.auth.signInWithPassword(form);
+type SignUp = Login & {
+  name: string;
+};
+
+export const login = async (payload: Login) => {
+  const { error } = await supabase.auth.signInWithPassword(payload);
 
   if (error) throw new Error(error.message);
 };
 
 export const logout = async () => {
   const { error } = await supabase.auth.signOut();
+
+  if (error) throw new Error(error.message);
+};
+
+export const signUp = async (payload: SignUp) => {
+  const { error } = await supabase.auth.signUp({
+    ...payload,
+    options: {
+      data: {
+        name: payload.name,
+      },
+    },
+  });
 
   if (error) throw new Error(error.message);
 };

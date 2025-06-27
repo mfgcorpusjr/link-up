@@ -2,30 +2,39 @@ import { supabase } from "@/lib/supabase";
 
 import { uploadFile } from "@/api/storage";
 
-import { ProfileForm } from "@/hooks/useProfile";
+import { Profile } from "@/types/models";
+import { File } from "@/types/common";
 
-export const getProfile = async (id: string) => {
+type Update = Omit<Profile, "avatar" | "created_at"> & {
+  avatar: string | null | File;
+};
+
+export const get = async (profile_id: string) => {
   const { data } = await supabase
     .from("profiles")
     .select()
-    .eq("id", id)
+    .eq("id", profile_id)
     .single()
     .throwOnError();
 
   return data;
 };
 
-export const updateProfile = async (form: ProfileForm) => {
-  if (form.avatar !== null && typeof form.avatar === "object") {
-    const path = "avatars/" + form.avatar.uri.split("/").pop();
-    const fileUri = await uploadFile("uploads", path, form.avatar);
-    form.avatar = fileUri;
+export const update = async (payload: Update) => {
+  if (payload.avatar !== null && typeof payload.avatar === "object") {
+    const path = "avatars/" + payload.avatar.uri.split("/").pop();
+    const fileUri = await uploadFile({
+      bucket: "uploads",
+      path,
+      file: payload.avatar,
+    });
+    payload.avatar = fileUri;
   }
 
   const { data } = await supabase
     .from("profiles")
-    .update(form)
-    .eq("id", form.id)
+    .update(payload)
+    .eq("id", payload.id)
     .select()
     .single()
     .throwOnError();

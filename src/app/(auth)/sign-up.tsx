@@ -14,7 +14,8 @@ import useSignUp, { SignUpForm } from "@/hooks/useSignUp";
 export default function SignUpScreen() {
   const {
     form: { Controller, control, errors, handleSubmit },
-    query: { isSigningUp, handleSignUp },
+    signUp,
+    isLoading,
   } = useSignUp();
 
   return (
@@ -99,8 +100,8 @@ export default function SignUpScreen() {
             <View className="gap-4">
               <Button
                 text="Sign Up"
-                isLoading={isSigningUp}
-                onPress={handleSubmit((data: SignUpForm) => handleSignUp(data))}
+                isLoading={isLoading}
+                onPress={handleSubmit((data: SignUpForm) => signUp(data))}
               />
 
               <View className="flex-row justify-center items-center gap-1">

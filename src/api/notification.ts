@@ -1,7 +1,62 @@
 import { supabase } from "@/lib/supabase";
 
-import { CreateNotification } from "@/hooks/useNotification";
+import { Notification } from "@/types/models";
 
-export const createNotification = async (notification: CreateNotification) => {
-  await supabase.from("notifications").insert(notification).throwOnError();
+export type CreatePayload = Omit<Notification, "id" | "is_read" | "created_at">;
+export type DeletePayload = {
+  type: "Comment" | "Like";
+  model_id: number;
+};
+export type MarkAsReadPayload = Pick<Notification, "receiver_id" | "post_id">;
+
+export const getAll = async ({ pageParam = 0 }, receiver_id: string) => {
+  const { data } = await supabase
+    .from("notifications")
+    .select("*, sender:sender_id(*)")
+    .eq("receiver_id", receiver_id)
+    .order("id", { ascending: false })
+    .range(pageParam, pageParam + 10 - 1)
+    .throwOnError();
+
+  return data;
+};
+
+export const create = async (payload: CreatePayload) => {
+  const { data } = await supabase
+    .from("notifications")
+    .insert(payload)
+    .select()
+    .single()
+    .throwOnError();
+
+  return data;
+};
+
+export const _delete = async (payload: DeletePayload) => {
+  const field = payload.type === "Comment" ? "comment_id" : "like_id";
+
+  const { data } = await supabase
+    .from("notifications")
+    .delete()
+    .eq(field, payload.model_id)
+    .select()
+    .single()
+    .throwOnError();
+
+  return data;
+};
+
+export const markAsRead = async ({
+  receiver_id,
+  post_id,
+}: MarkAsReadPayload) => {
+  const { data } = await supabase
+    .from("notifications")
+    .update({ is_read: true })
+    .match({ receiver_id, post_id })
+    .select()
+    .single()
+    .throwOnError();
+
+  return data;
 };

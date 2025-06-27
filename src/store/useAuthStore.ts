@@ -3,7 +3,7 @@ import { Session } from "@supabase/supabase-js";
 
 import { supabase } from "@/lib/supabase";
 
-import { getProfile } from "@/api/profile";
+import { get as getProfile } from "@/api/profile";
 
 import { Profile } from "@/types/models";
 

@@ -6,16 +6,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Snackbar from "react-native-snackbar";
 
+import { upsert, get } from "@/api/post";
+
 import useAuthStore from "@/store/useAuthStore";
 import useMediaPicker from "@/hooks/useMediaPicker";
-
-import { upsertPost, getPost } from "@/api/post";
 
 import { isImage } from "@/helpers/image";
 
 const schema = z.object({
   id: z.number().optional(),
-  profile_id: z.string({ required_error: "Profile is required" }),
+  profile_id: z.string({ required_error: "Profile ID is required" }),
   text: z.string({ required_error: "Text is required" }),
   file: z.union([
     z.string(),
@@ -26,9 +26,11 @@ const schema = z.object({
 
 export type PostForm = z.infer<typeof schema>;
 
-const useUpsertPost = (id: number | undefined) => {
+const useUpsertPost = (id?: number) => {
   const profile = useAuthStore((state) => state.profile);
-  const { media, handlePickMedia } = useMediaPicker();
+
+  const { media, pickMedia } = useMediaPicker();
+
   const queryClient = useQueryClient();
 
   const {
@@ -47,14 +49,14 @@ const useUpsertPost = (id: number | undefined) => {
     },
   });
 
-  const { isLoading, data } = useQuery({
-    queryKey: ["posts", id],
-    queryFn: () => getPost(id!),
+  const { data } = useQuery({
     enabled: !!id,
+    queryKey: ["posts", id],
+    queryFn: () => get(id!),
   });
 
   const { isPending, mutate } = useMutation({
-    mutationFn: (data: PostForm) => upsertPost(data),
+    mutationFn: (data: PostForm) => upsert(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       router.back();
@@ -86,19 +88,16 @@ const useUpsertPost = (id: number | undefined) => {
     form: {
       Controller,
       control,
-      errors,
       handleSubmit,
+      errors,
     },
-    query: {
-      isPending,
-      handleSave: mutate,
-    },
+    save: mutate,
+    isLoading: isPending,
     mediaPicker: {
-      handlePickMedia,
+      pickMedia,
     },
-    meta: {
+    metadata: {
       profile,
-      isLoading,
       fileUri,
       isImageFile: isImage(file),
       removeFile: () => setValue("file", null),

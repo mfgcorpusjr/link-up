@@ -1,47 +1,34 @@
 import { useState, useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Snackbar from "react-native-snackbar";
 
-import { like, unLike } from "@/api/like";
-
-import { PostItem } from "@/types/models";
+import { like, unlike, Payload } from "@/api/like";
 
 import useAuthStore from "@/store/useAuthStore";
 
-import useNotification from "@/hooks/useNotification";
-
-export type Payload = {
-  post_id: number;
-  profile_id: string;
-};
+import { PostItem } from "@/types/models";
 
 const useLike = (post: PostItem) => {
-  const profile = useAuthStore((state) => state.profile);
-  const { handleCreateNotification } = useNotification();
-
   const [isLiked, setIsLiked] = useState(false);
-  const [likePayload, setLikePayload] = useState<Payload>();
+  const [payload, setPayload] = useState<Payload>();
+
+  const profile = useAuthStore((state) => state.profile);
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (profile) {
       setIsLiked(post.likes.some((v) => v.profile_id === profile.id));
-      setLikePayload({ post_id: post.id, profile_id: profile.id });
+      setPayload({ post_id: post.id, profile_id: profile.id });
     }
   }, [profile, post]);
 
-  const { isPending: isLiking, mutate } = useMutation({
-    mutationFn: () => (isLiked ? unLike(likePayload!) : like(likePayload!)),
-    onSuccess: () => {
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => (isLiked ? unlike(payload!) : like(payload!)),
+    onSuccess: ({ post_id }) => {
       setIsLiked((v) => !v);
 
-      if (profile && !isLiked && post.profile_id !== profile.id) {
-        handleCreateNotification({
-          sender_id: profile.id,
-          receiver_id: post.profile_id,
-          post_id: post.id,
-          title: "liked your post",
-        });
-      }
+      queryClient.invalidateQueries({ queryKey: ["posts", post_id] });
     },
     onError: (error) => {
       Snackbar.show({
@@ -52,9 +39,11 @@ const useLike = (post: PostItem) => {
   });
 
   return {
-    isLiking,
-    isLiked,
-    handleToggleLike: () => mutate(),
+    toggleLike: mutate,
+    isLoading: isPending,
+    metadata: {
+      isLiked,
+    },
   };
 };
 

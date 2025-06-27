@@ -4,9 +4,9 @@ import Avatar from "@/components/common/Avatar";
 import Icon from "@/components/common/Icon";
 import Text from "@/components/ui/Text";
 
-import { CommentWithProfile } from "@/types/models";
+import useComment from "@/hooks/useComment";
 
-import useDeleteComment from "@/hooks/useDeleteComment";
+import { CommentWithProfile } from "@/types/models";
 
 import { humanReadableDate } from "@/helpers/date";
 
@@ -19,7 +19,7 @@ export default function CommentItem({
   comment,
   showActionIcon,
 }: CommentItemProps) {
-  const { isDeleting, handleDelete } = useDeleteComment();
+  const { delete: deleteComment, isDeleting } = useComment();
 
   return (
     <View className="flex-row gap-2">
@@ -37,7 +37,7 @@ export default function CommentItem({
               name="trash-outline"
               color="crimson"
               isLoading={isDeleting}
-              onPress={() => handleDelete(comment.id)}
+              onPress={() => deleteComment(comment.id)}
             />
           )}
         </View>
@@ -48,8 +48,4 @@ export default function CommentItem({
       </View>
     </View>
   );
-}
-
-{
-  /* <Text variant="caption">{humanReadableDate(comment.created_at)}</Text> */
 }

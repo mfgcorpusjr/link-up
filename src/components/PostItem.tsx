@@ -37,9 +37,13 @@ export default function PostItem({
   showMoreIcon = true,
   showActionsIcon,
 }: PostItemProps) {
-  const { isLiking, isLiked, handleToggleLike } = useLike(post);
-  const { isSharing, handleShare } = useShare();
-  const { isDeleting, handleDelete } = useDeletePost();
+  const {
+    toggleLike,
+    isLoading: isLiking,
+    metadata: { isLiked },
+  } = useLike(post);
+  const { share, isLoading: isSharing } = useShare();
+  const { delete: deletePost, isLoading: isDeleting } = useDeletePost();
 
   return (
     <View
@@ -67,7 +71,7 @@ export default function PostItem({
               name="trash-outline"
               color="crimson"
               isLoading={isDeleting}
-              onPress={() => handleDelete(post.id)}
+              onPress={() => deletePost(post.id)}
             />
           </View>
         )}
@@ -86,7 +90,7 @@ export default function PostItem({
             name={isLiked ? "heart" : "heart-outline"}
             color={isLiked ? "crimson" : "black"}
             isLoading={isLiking}
-            onPress={handleToggleLike}
+            onPress={() => toggleLike()}
           />
           <Text>{post.likes.length}</Text>
         </View>
@@ -101,7 +105,7 @@ export default function PostItem({
         <Icon
           name="share-social-outline"
           isLoading={isSharing}
-          onPress={() => handleShare(post)}
+          onPress={() => share(post)}
         />
       </View>
     </View>

@@ -2,11 +2,11 @@ import { useState } from "react";
 import { ViewabilityConfig, ViewToken } from "react-native";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-import { getPosts } from "@/api/post";
+import { getAll } from "@/api/post";
 
-export type UsePostListOption = string | undefined;
+import { Profile } from "@/types/models";
 
-const usePostList = (profileId: UsePostListOption = undefined) => {
+const usePostList = (profile?: Profile) => {
   const [activePostId, setActivePostId] = useState<number>();
   const [isRefetching, setIsRefetching] = useState(false);
 
@@ -18,8 +18,9 @@ const usePostList = (profileId: UsePostListOption = undefined) => {
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: profileId ? ["posts", "profile", profileId] : ["posts"],
-    queryFn: ({ pageParam }) => getPosts({ pageParam }, profileId),
+    queryKey: profile ? ["posts", "profile", profile.id] : ["posts"],
+    queryFn: ({ pageParam }) =>
+      profile ? getAll({ pageParam }, profile.id) : getAll({ pageParam }),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) =>
       lastPage.length < 10 ? undefined : allPages.length * 10,
@@ -44,16 +45,14 @@ const usePostList = (profileId: UsePostListOption = undefined) => {
   };
 
   return {
-    query: {
-      data,
-      isLoading,
-      refetch,
-      isRefetching,
-      hasNextPage,
-      fetchNextPage,
-      isFetchingNextPage,
-    },
-    meta: {
+    data,
+    isLoading,
+    refetch,
+    isRefetching,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    metadata: {
       activePostId,
       viewabilityConfig,
       handleViewableItemsChanged,

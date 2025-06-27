@@ -21,17 +21,15 @@ export default function ProfileScreen() {
   }
 
   const {
-    query: {
-      data,
-      isLoading,
-      refetch,
-      isRefetching,
-      hasNextPage,
-      fetchNextPage,
-      isFetchingNextPage,
-    },
-    meta: { activePostId, viewabilityConfig, handleViewableItemsChanged },
-  } = usePostList(profile.id);
+    data,
+    isLoading,
+    refetch,
+    isRefetching,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    metadata: { activePostId, viewabilityConfig, handleViewableItemsChanged },
+  } = usePostList(profile);
 
   return (
     <ScreenWrapper>

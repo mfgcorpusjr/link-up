@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { router } from "expo-router";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { z } from "zod";
@@ -9,32 +9,33 @@ import Snackbar from "react-native-snackbar";
 import useAuthStore from "@/store/useAuthStore";
 import useMediaPicker from "@/hooks/useMediaPicker";
 
-import { updateProfile } from "@/api/profile";
+import { update } from "@/api/profile";
 
 import { replaceEmptyWithNull } from "@/helpers/data";
 
 const schema = z.object({
   id: z.string({ required_error: "ID is required" }),
+  name: z
+    .string({
+      required_error: "Name is required",
+    })
+    .trim(),
   avatar: z.union([
     z.string(),
     z.null(),
     z.object({ uri: z.string(), mimeType: z.string() }),
   ]),
-  name: z.string({
-    required_error: "Name is required",
-  }),
-  phone_number: z.union([z.string(), z.null()]),
-  location: z.union([z.string(), z.null()]),
-  bio: z.union([z.string(), z.null()]),
+  bio: z.union([z.string().trim(), z.null()]),
+  location: z.union([z.string().trim(), z.null()]),
+  phone_number: z.union([z.string().trim(), z.null()]),
 });
 
 export type ProfileForm = z.infer<typeof schema>;
 
 const useProfile = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const profile = useAuthStore((state) => state.profile);
   const setProfile = useAuthStore((state) => state.setProfile);
-  const { media, handlePickMedia } = useMediaPicker();
+  const { media, pickMedia } = useMediaPicker();
 
   const {
     control,
@@ -46,9 +47,9 @@ const useProfile = () => {
     resolver: zodResolver(schema),
   });
 
-  const { isPending: isEditing, mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (data: ProfileForm) => {
-      return updateProfile(replaceEmptyWithNull(data));
+      return update(replaceEmptyWithNull(data));
     },
     onSuccess: (data) => {
       setProfile(data.id);
@@ -65,13 +66,12 @@ const useProfile = () => {
   useEffect(() => {
     if (profile) {
       reset(profile);
-      setIsLoading(false);
     }
   }, [profile]);
 
   useEffect(() => {
-    if (media) {
-      setValue("avatar", { uri: media.uri, mimeType: media.mimeType! });
+    if (media && media.mimeType) {
+      setValue("avatar", { uri: media.uri, mimeType: media.mimeType });
     }
   }, [media]);
 
@@ -83,18 +83,15 @@ const useProfile = () => {
     form: {
       Controller,
       control,
-      errors,
       handleSubmit,
+      errors,
     },
-    query: {
-      isEditing,
-      handleEdit: mutate,
-    },
+    update: mutate,
+    isLoading: isPending,
     mediaPicker: {
-      handlePickMedia,
+      pickMedia,
     },
-    meta: {
-      isLoading,
+    metadata: {
       avatarUri,
     },
   };

@@ -21,8 +21,13 @@ export const isImage = (file: File | string | null) => {
 };
 
 export const downloadRemoteFile = async (remoteUri: string) => {
-  const fileName = remoteUri.split("/").pop();
-  const localUri = `${FileSystem.cacheDirectory}${fileName}`;
-  const { uri } = await FileSystem.downloadAsync(remoteUri, localUri);
-  return uri;
+  try {
+    const fileName = remoteUri.split("/").pop();
+    const localUri = `${FileSystem.cacheDirectory}${fileName}`;
+    const { uri } = await FileSystem.downloadAsync(remoteUri, localUri);
+
+    return uri;
+  } catch (error) {
+    throw new Error("Failed to download remote file");
+  }
 };

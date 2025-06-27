@@ -1,15 +1,10 @@
-import { PropsWithChildren } from "react";
 import { View, FlatList } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
 import ScreenWrapper from "@/components/common/ScreenWrapper";
-import ScreenHeader from "@/components/common/ScreenHeader";
-import BackButton from "@/components/common/BackButton";
 import Loading from "@/components/common/Loading";
 import Error from "@/components/common/Error";
 import ListEmpty from "@/components/common/ListEmpty";
-import PostItem from "@/components/PostItem";
-import CommentForm from "@/components/CommentForm";
 import CommentItem from "@/components/CommentItem";
 import PostDetailsHeader from "@/components/PostDetailsHeader";
 

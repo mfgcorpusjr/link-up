@@ -2,7 +2,6 @@ import { View, Pressable } from "react-native";
 
 import Avatar from "@/components/common/Avatar";
 import Icon from "@/components/common/Icon";
-import Loading from "@/components/common/Loading";
 import Text from "@/components/ui/Text";
 import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
@@ -17,22 +16,19 @@ type PostFormProps = {
 
 export default function PostForm({ id }: PostFormProps) {
   const {
-    form: { Controller, control, errors, handleSubmit },
-    query: { isPending, handleSave },
-    mediaPicker: { handlePickMedia },
-    meta: { profile, isLoading, fileUri, isImageFile, removeFile },
+    form: { Controller, control, handleSubmit, errors },
+    save,
+    isLoading,
+    mediaPicker: { pickMedia },
+    metadata: { profile, fileUri, isImageFile, removeFile },
   } = useUpsertPost(id);
-
-  if (!profile || isLoading) {
-    return <Loading />;
-  }
 
   return (
     <View className="gap-8">
       <View className="flex-row items-center gap-4">
-        <Avatar uri={profile.avatar || null} size={60} />
+        <Avatar uri={profile?.avatar || null} size={60} />
         <View>
-          <Text variant="headline">{profile.name}</Text>
+          <Text variant="headline">{profile?.name}</Text>
           <Text variant="caption">Public</Text>
         </View>
       </View>
@@ -77,10 +73,10 @@ export default function PostForm({ id }: PostFormProps) {
         <View className="flex-row justify-between items-center border border-zinc-200 rounded-2xl p-4">
           <Text variant="subHeadline">Add to your post</Text>
           <View className="flex-row items-center gap-5">
-            <Icon name="image-outline" onPress={() => handlePickMedia()} />
+            <Icon name="image-outline" onPress={() => pickMedia()} />
             <Icon
               name="videocam-outline"
-              onPress={() => handlePickMedia(["videos"])}
+              onPress={() => pickMedia(["videos"])}
             />
           </View>
         </View>
@@ -88,9 +84,9 @@ export default function PostForm({ id }: PostFormProps) {
 
       <Button
         text="Post"
-        isLoading={isPending}
+        isLoading={isLoading}
         onPress={handleSubmit((data: TPostForm) => {
-          handleSave(data);
+          save(data);
         })}
       />
     </View>
