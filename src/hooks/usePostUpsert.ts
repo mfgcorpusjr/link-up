@@ -26,7 +26,7 @@ const schema = z.object({
 
 export type PostForm = z.infer<typeof schema>;
 
-const useUpsertPost = (id?: number) => {
+const usePostUpsert = (id?: number) => {
   const profile = useAuthStore((state) => state.profile);
 
   const { media, pickMedia } = useMediaPicker();
@@ -105,4 +105,4 @@ const useUpsertPost = (id?: number) => {
   };
 };
 
-export default useUpsertPost;
+export default usePostUpsert;

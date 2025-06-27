@@ -5,7 +5,7 @@ import Snackbar from "react-native-snackbar";
 
 import { _delete } from "@/api/post";
 
-const useDeletePost = () => {
+const usePostDelete = () => {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
@@ -39,4 +39,4 @@ const useDeletePost = () => {
   };
 };
 
-export default useDeletePost;
+export default usePostDelete;

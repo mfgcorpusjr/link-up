@@ -8,7 +8,7 @@ import Button from "@/components/ui/Button";
 import ImagePreview from "@/components/ImagePreview";
 import VideoPreview from "@/components/VideoPreview";
 
-import useUpsertPost, { PostForm as TPostForm } from "@/hooks/useUpsertPost";
+import usePostUpsert, { PostForm as TPostForm } from "@/hooks/usePostUpsert";
 
 type PostFormProps = {
   id?: number;
@@ -21,7 +21,7 @@ export default function PostForm({ id }: PostFormProps) {
     isLoading,
     mediaPicker: { pickMedia },
     metadata: { profile, fileUri, isImageFile, removeFile },
-  } = useUpsertPost(id);
+  } = usePostUpsert(id);
 
   return (
     <View className="gap-8">

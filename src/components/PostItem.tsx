@@ -9,7 +9,7 @@ import VideoPreview from "@/components/VideoPreview";
 
 import useLike from "@/hooks/useLike";
 import useShare from "@/hooks/useShare";
-import useDeletePost from "@/hooks/useDeletePost";
+import usePostDelete from "@/hooks/usePostDelete";
 
 import { PostItem as TPostItem } from "@/types/models";
 
@@ -43,7 +43,7 @@ export default function PostItem({
     metadata: { isLiked },
   } = useLike(post);
   const { share, isLoading: isSharing } = useShare();
-  const { delete: deletePost, isLoading: isDeleting } = useDeletePost();
+  const { delete: deletePost, isLoading: isDeleting } = usePostDelete();
 
   return (
     <View
