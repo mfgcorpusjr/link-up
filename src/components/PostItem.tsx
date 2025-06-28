@@ -9,7 +9,7 @@ import VideoPreview from "@/components/VideoPreview";
 
 import useLike from "@/hooks/useLike";
 import useShare from "@/hooks/useShare";
-import usePostDelete from "@/hooks/usePostDelete";
+import usePost from "@/hooks/usePost";
 
 import { PostItem as TPostItem } from "@/types/models";
 
@@ -42,7 +42,9 @@ export default function PostItem({
     metadata: { isLiked },
   } = useLike(post);
   const { share } = useShare();
-  const { delete: deletePost, isLoading: isDeleting } = usePostDelete();
+  const {
+    deletePost: { mutate, isPending },
+  } = usePost();
 
   return (
     <View
@@ -69,8 +71,8 @@ export default function PostItem({
             <Icon
               name="trash-outline"
               color="crimson"
-              isLoading={isDeleting}
-              onPress={() => deletePost(post.id)}
+              isLoading={isPending}
+              onPress={() => mutate(post.id)}
             />
           </View>
         )}

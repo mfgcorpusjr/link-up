@@ -8,7 +8,8 @@ import Button from "@/components/ui/Button";
 import ImagePreview from "@/components/ImagePreview";
 import VideoPreview from "@/components/VideoPreview";
 
-import usePostUpsert, { PostForm as TPostForm } from "@/hooks/usePostUpsert";
+import usePost from "@/hooks/usePost";
+import { PostForm as TPostForm } from "@/schemas/post";
 
 type PostFormProps = {
   id?: number;
@@ -16,12 +17,16 @@ type PostFormProps = {
 
 export default function PostForm({ id }: PostFormProps) {
   const {
-    form: { Controller, control, handleSubmit, errors },
-    save,
-    isLoading,
+    Controller,
+    postForm: {
+      control,
+      handleSubmit,
+      formState: { errors },
+    },
+    upsert,
     mediaPicker: { pickMedia },
     metadata: { profile, fileUri, isImageFile, removeFile },
-  } = usePostUpsert(id);
+  } = usePost(id);
 
   return (
     <View className="gap-8">
@@ -84,9 +89,9 @@ export default function PostForm({ id }: PostFormProps) {
 
       <Button
         text="Post"
-        isLoading={isLoading}
+        isLoading={upsert.isPending}
         onPress={handleSubmit((data: TPostForm) => {
-          save(data);
+          upsert.mutate(data);
         })}
       />
     </View>

@@ -8,7 +8,7 @@ import ListEmpty from "@/components/common/ListEmpty";
 import CommentItem from "@/components/CommentItem";
 import PostDetailsHeader from "@/components/PostDetailsHeader";
 
-import usePostDetails from "@/hooks/usePostDetails";
+import usePost from "@/hooks/usePost";
 
 import useAuthStore from "@/store/useAuthStore";
 
@@ -17,8 +17,8 @@ export default function PostDetailsScreen() {
   const profile = useAuthStore((state) => state.profile);
 
   const {
-    query: { isLoading, data, error },
-  } = usePostDetails(Number(id));
+    get: { isLoading, data, error },
+  } = usePost(Number(id));
 
   if (isLoading || !profile) {
     return <Loading />;

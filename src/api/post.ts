@@ -2,15 +2,9 @@ import { supabase } from "@/lib/supabase";
 
 import { uploadFile } from "@/api/storage";
 
-import { Post } from "@/types/models";
-import { File } from "@/types/common";
+import { PostForm } from "@/schemas/post";
 
 import { isImage } from "@/helpers/image";
-
-type Upsert = Pick<Post, "profile_id" | "text"> & {
-  id?: number;
-  file: string | null | File;
-};
 
 export const get = async (post_id: number) => {
   const { data } = await supabase
@@ -44,7 +38,7 @@ export const getAll = async ({ pageParam = 0 }, profile_id?: string) => {
   return data;
 };
 
-export const upsert = async (payload: Upsert) => {
+export const upsert = async (payload: PostForm) => {
   if (payload.file !== null && typeof payload.file === "object") {
     const folder = isImage(payload.file) ? "post_images" : "post_videos";
     const path = `${folder}/${payload.file.uri.split("/").pop()}`;
