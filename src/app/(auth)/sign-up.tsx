@@ -9,14 +9,19 @@ import Text from "@/components/ui/Text";
 import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
 
-import useSignUp, { SignUpForm } from "@/hooks/useSignUp";
+import useAuth from "@/hooks/useAuth";
+import { SignUpForm } from "@/schema/signUp";
 
 export default function SignUpScreen() {
   const {
-    form: { Controller, control, errors, handleSubmit },
-    signUp,
-    isLoading,
-  } = useSignUp();
+    Controller,
+    signUpForm: {
+      control,
+      handleSubmit,
+      formState: { errors },
+    },
+    signUp: { mutate, isPending },
+  } = useAuth();
 
   return (
     <ScreenWrapper className="pb-4">
@@ -100,8 +105,8 @@ export default function SignUpScreen() {
             <View className="gap-4">
               <Button
                 text="Sign Up"
-                isLoading={isLoading}
-                onPress={handleSubmit((data: SignUpForm) => signUp(data))}
+                isLoading={isPending}
+                onPress={handleSubmit((data: SignUpForm) => mutate(data))}
               />
 
               <View className="flex-row justify-center items-center gap-1">

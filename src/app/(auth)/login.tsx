@@ -9,14 +9,19 @@ import Text from "@/components/ui/Text";
 import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
 
-import useLogin, { LoginForm } from "@/hooks/useLogin";
+import useAuth from "@/hooks/useAuth";
+import { LoginForm } from "@/schema/login";
 
 export default function LoginScreen() {
   const {
-    form: { Controller, control, errors, handleSubmit },
-    login,
-    isLoading,
-  } = useLogin();
+    Controller,
+    loginForm: {
+      control,
+      handleSubmit,
+      formState: { errors },
+    },
+    login: { mutate, isPending },
+  } = useAuth();
 
   return (
     <ScreenWrapper className="pb-4">
@@ -80,8 +85,8 @@ export default function LoginScreen() {
             <View className="gap-4">
               <Button
                 text="Login"
-                isLoading={isLoading}
-                onPress={handleSubmit((data: LoginForm) => login(data))}
+                isLoading={isPending}
+                onPress={handleSubmit((data: LoginForm) => mutate(data))}
               />
 
               <View className="flex-row justify-center items-center gap-1">
