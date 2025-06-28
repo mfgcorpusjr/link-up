@@ -9,7 +9,6 @@ import Snackbar from "react-native-snackbar";
 import {
   getAll as _getAll,
   create as _create,
-  _delete,
   markAsRead as _markAsRead,
 } from "@/api/notification";
 
@@ -31,21 +30,6 @@ const useNotification = (profile?: Profile) => {
 
   const create = useMutation({
     mutationFn: _create,
-    onSuccess: ({ receiver_id }) => {
-      queryClient.invalidateQueries({
-        queryKey: ["notifications", receiver_id],
-      });
-    },
-    onError: (error) => {
-      Snackbar.show({
-        text: error.message,
-        duration: Snackbar.LENGTH_SHORT,
-      });
-    },
-  });
-
-  const deleteNotification = useMutation({
-    mutationFn: _delete,
     onSuccess: ({ receiver_id }) => {
       queryClient.invalidateQueries({
         queryKey: ["notifications", receiver_id],
@@ -87,7 +71,6 @@ const useNotification = (profile?: Profile) => {
       isRefetching,
     },
     create,
-    deleteNotification,
     markAsRead,
   };
 };

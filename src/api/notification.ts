@@ -2,11 +2,9 @@ import { supabase } from "@/lib/supabase";
 
 import { Notification } from "@/types/models";
 
-export type CreatePayload = Omit<Notification, "id" | "is_read" | "created_at">;
-export type DeletePayload = {
-  type: "Comment" | "Like";
-  model_id: number;
-};
+import { CreateLikeNotificationPayload } from "@/hooks/useLikeSubscription";
+import { CreateCommentNotificationPayload } from "@/hooks/useCommentSubscription";
+
 export type MarkAsReadPayload = Pick<Notification, "receiver_id" | "post_id">;
 
 export const getAll = async ({ pageParam = 0 }, receiver_id: string) => {
@@ -21,24 +19,12 @@ export const getAll = async ({ pageParam = 0 }, receiver_id: string) => {
   return data;
 };
 
-export const create = async (payload: CreatePayload) => {
+export const create = async (
+  payload: CreateLikeNotificationPayload | CreateCommentNotificationPayload
+) => {
   const { data } = await supabase
     .from("notifications")
     .insert(payload)
-    .select()
-    .single()
-    .throwOnError();
-
-  return data;
-};
-
-export const _delete = async (payload: DeletePayload) => {
-  const field = payload.type === "Comment" ? "comment_id" : "like_id";
-
-  const { data } = await supabase
-    .from("notifications")
-    .delete()
-    .eq(field, payload.model_id)
     .select()
     .single()
     .throwOnError();
