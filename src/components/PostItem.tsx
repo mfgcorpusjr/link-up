@@ -91,7 +91,7 @@ export default function PostItem({
             name={isLiked ? "heart" : "heart-outline"}
             color={isLiked ? "crimson" : "black"}
             isLoading={toggleLike.isPending}
-            onPress={() => toggleLike.mutate}
+            onPress={() => toggleLike.mutate()}
           />
           <Text>{post.likes.length}</Text>
         </View>
