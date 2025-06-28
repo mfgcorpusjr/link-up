@@ -7,40 +7,30 @@ import {
 import Snackbar from "react-native-snackbar";
 
 import {
-  getAll,
-  create,
+  getAll as _getAll,
+  create as _create,
   _delete,
-  markAsRead,
-  CreatePayload,
-  DeletePayload,
-  MarkAsReadPayload,
+  markAsRead as _markAsRead,
 } from "@/api/notification";
 
 import { Profile } from "@/types/models";
 
-const useNotification = (profile: Profile | undefined) => {
+const useNotification = (profile?: Profile) => {
   const [isRefetching, setIsRefetching] = useState(false);
 
   const queryClient = useQueryClient();
 
-  const {
-    data,
-    isLoading,
-    refetch: handleRefetch,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
+  const getAll = useInfiniteQuery({
     enabled: !!profile,
     queryKey: ["notifications", profile?.id],
-    queryFn: ({ pageParam }) => getAll({ pageParam }, profile?.id || ""),
+    queryFn: ({ pageParam }) => _getAll({ pageParam }, profile?.id || ""),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) =>
       lastPage.length < 10 ? undefined : allPages.length * 10,
   });
 
-  const { mutate: createNotification } = useMutation({
-    mutationFn: (notification: CreatePayload) => create(notification),
+  const create = useMutation({
+    mutationFn: _create,
     onSuccess: ({ receiver_id }) => {
       queryClient.invalidateQueries({
         queryKey: ["notifications", receiver_id],
@@ -54,8 +44,8 @@ const useNotification = (profile: Profile | undefined) => {
     },
   });
 
-  const { mutate: deleteNotification } = useMutation({
-    mutationFn: (notification: DeletePayload) => _delete(notification),
+  const deleteNotification = useMutation({
+    mutationFn: _delete,
     onSuccess: ({ receiver_id }) => {
       queryClient.invalidateQueries({
         queryKey: ["notifications", receiver_id],
@@ -69,8 +59,8 @@ const useNotification = (profile: Profile | undefined) => {
     },
   });
 
-  const { mutate: markNotificationsAsRead } = useMutation({
-    mutationFn: (notification: MarkAsReadPayload) => markAsRead(notification),
+  const markAsRead = useMutation({
+    mutationFn: _markAsRead,
     onSuccess: ({ receiver_id }) => {
       queryClient.invalidateQueries({
         queryKey: ["notifications", receiver_id],
@@ -86,21 +76,19 @@ const useNotification = (profile: Profile | undefined) => {
 
   const refetch = async () => {
     setIsRefetching(true);
-    await handleRefetch();
+    await getAll.refetch();
     setIsRefetching(false);
   };
 
   return {
-    data,
-    isLoading,
-    refetch,
-    isRefetching,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-    create: createNotification,
-    delete: deleteNotification,
-    markAsRead: markNotificationsAsRead,
+    getAll: {
+      ...getAll,
+      refetch,
+      isRefetching,
+    },
+    create,
+    deleteNotification,
+    markAsRead,
   };
 };
 
