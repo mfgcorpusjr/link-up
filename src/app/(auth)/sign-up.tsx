@@ -10,7 +10,7 @@ import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
 
 import useAuth from "@/hooks/useAuth";
-import { SignUpForm } from "@/schema/signUp";
+import { SignUpForm } from "@/schemas/signUp";
 
 export default function SignUpScreen() {
   const {

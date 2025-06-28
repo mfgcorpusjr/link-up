@@ -10,7 +10,7 @@ import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
 
 import useAuth from "@/hooks/useAuth";
-import { LoginForm } from "@/schema/login";
+import { LoginForm } from "@/schemas/login";
 
 export default function LoginScreen() {
   const {

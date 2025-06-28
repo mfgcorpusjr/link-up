@@ -10,13 +10,18 @@ import Text from "@/components/ui/Text";
 import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
 
-import useProfile, { ProfileForm } from "@/hooks/useProfile";
+import useProfile from "@/hooks/useProfile";
+import { ProfileForm } from "@/schemas/profile";
 
 export default function EditProfileScreen() {
   const {
-    form: { Controller, control, handleSubmit, errors },
-    update,
-    isLoading,
+    Controller,
+    profileForm: {
+      control,
+      handleSubmit,
+      formState: { errors },
+    },
+    update: { mutate, isPending },
     mediaPicker: { pickMedia },
     metadata: { avatarUri },
   } = useProfile();
@@ -121,9 +126,9 @@ export default function EditProfileScreen() {
 
               <Button
                 text="Update"
-                isLoading={isLoading}
+                isLoading={isPending}
                 onPress={handleSubmit((data: ProfileForm) => {
-                  update(data);
+                  mutate(data);
                 })}
               />
             </View>

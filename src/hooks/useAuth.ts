@@ -10,8 +10,8 @@ import {
   logout as _logout,
 } from "@/api/auth";
 
-import signUpFormSchema from "@/schema/signUp";
-import loginFormSchema from "@/schema/login";
+import signUpFormSchema from "@/schemas/signUp";
+import loginFormSchema from "@/schemas/login";
 
 const useAuth = () => {
   const signUpForm = useForm({
@@ -69,7 +69,10 @@ const useAuth = () => {
     signUp,
     loginForm,
     login,
-    logout: confirmLogout,
+    logout: {
+      mutate: confirmLogout,
+      isPending: logout.isPending,
+    },
   };
 };
 
