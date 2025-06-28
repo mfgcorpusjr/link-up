@@ -31,8 +31,10 @@ const useShare = () => {
   };
 
   return {
-    share,
-    isLoading,
+    share: {
+      mutate: share,
+      isPending: isLoading,
+    },
   };
 };
 

@@ -1,8 +1,6 @@
 import { supabase } from "@/lib/supabase";
 
-import { Like } from "@/types/models";
-
-export type Payload = Pick<Like, "post_id" | "profile_id">;
+import { Payload } from "@/hooks/useLike";
 
 export const like = async (payload: Payload) => {
   const { data } = await supabase

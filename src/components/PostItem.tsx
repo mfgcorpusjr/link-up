@@ -39,10 +39,9 @@ export default function PostItem({
 }: PostItemProps) {
   const {
     toggleLike,
-    isLoading: isLiking,
     metadata: { isLiked },
   } = useLike(post);
-  const { share, isLoading: isSharing } = useShare();
+  const { share } = useShare();
   const { delete: deletePost, isLoading: isDeleting } = usePostDelete();
 
   return (
@@ -89,8 +88,8 @@ export default function PostItem({
           <Icon
             name={isLiked ? "heart" : "heart-outline"}
             color={isLiked ? "crimson" : "black"}
-            isLoading={isLiking}
-            onPress={() => toggleLike()}
+            isLoading={toggleLike.isPending}
+            onPress={() => toggleLike.mutate}
           />
           <Text>{post.likes.length}</Text>
         </View>
@@ -104,8 +103,8 @@ export default function PostItem({
 
         <Icon
           name="share-social-outline"
-          isLoading={isSharing}
-          onPress={() => share(post)}
+          isLoading={share.isPending}
+          onPress={() => share.mutate(post)}
         />
       </View>
     </View>
