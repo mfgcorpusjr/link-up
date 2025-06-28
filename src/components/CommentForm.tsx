@@ -5,7 +5,9 @@ import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
 import Text from "@/components/ui/Text";
 
-import useComment, { CommentForm as TCommentForm } from "@/hooks/useComment";
+import useComment from "@/hooks/useComment";
+
+import { CommentForm as TCommentForm } from "@/schemas/comment";
 
 import { PostItem } from "@/types/models";
 
@@ -17,9 +19,13 @@ type CommentFormProps = {
 
 export default function CommentForm({ post }: CommentFormProps) {
   const {
-    form: { Controller, control, handleSubmit, errors },
-    create,
-    isCreating,
+    Controller,
+    createForm: {
+      control,
+      handleSubmit,
+      formState: { errors },
+    },
+    create: { mutate, isPending },
   } = useComment(post);
 
   return (
@@ -47,8 +53,8 @@ export default function CommentForm({ post }: CommentFormProps) {
         containerClassName="w-14"
         variant="outlined"
         icon={<Icon name="send-outline" color={colors.tint} />}
-        isLoading={isCreating}
-        onPress={handleSubmit((data: TCommentForm) => create(data))}
+        isLoading={isPending}
+        onPress={handleSubmit((data: TCommentForm) => mutate(data))}
       />
     </View>
   );

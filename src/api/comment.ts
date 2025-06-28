@@ -1,10 +1,8 @@
 import { supabase } from "@/lib/supabase";
 
-import { Comment } from "@/types/models";
+import { CommentForm } from "@/schemas/comment";
 
-type Create = Pick<Comment, "post_id" | "profile_id" | "text">;
-
-export const create = async (payload: Create) => {
+export const create = async (payload: CommentForm) => {
   const { data } = await supabase
     .from("comments")
     .insert(payload)

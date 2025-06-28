@@ -19,7 +19,7 @@ export default function CommentItem({
   comment,
   showActionIcon,
 }: CommentItemProps) {
-  const { delete: deleteComment, isDeleting } = useComment();
+  const { deleteComment } = useComment();
 
   return (
     <View className="flex-row gap-2">
@@ -36,8 +36,8 @@ export default function CommentItem({
             <Icon
               name="trash-outline"
               color="crimson"
-              isLoading={isDeleting}
-              onPress={() => deleteComment(comment.id)}
+              isLoading={deleteComment.isPending}
+              onPress={() => deleteComment.mutate(comment.id)}
             />
           )}
         </View>
