@@ -16,13 +16,15 @@ import colors from "@/constants/colors";
 
 export default function HomeScreen() {
   const {
-    data,
-    isLoading,
-    refetch,
-    isRefetching,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
+    getAll: {
+      data,
+      isLoading,
+      refetch,
+      isRefetching,
+      hasNextPage,
+      fetchNextPage,
+      isFetchingNextPage,
+    },
     metadata: { activePostId, viewabilityConfig, handleViewableItemsChanged },
   } = usePostList();
 

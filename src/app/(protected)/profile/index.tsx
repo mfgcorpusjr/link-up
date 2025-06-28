@@ -21,13 +21,15 @@ export default function ProfileScreen() {
   }
 
   const {
-    data,
-    isLoading,
-    refetch,
-    isRefetching,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
+    getAll: {
+      data,
+      isLoading,
+      refetch,
+      isRefetching,
+      hasNextPage,
+      fetchNextPage,
+      isFetchingNextPage,
+    },
     metadata: { activePostId, viewabilityConfig, handleViewableItemsChanged },
   } = usePostList(profile);
 

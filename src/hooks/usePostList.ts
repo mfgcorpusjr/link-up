@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ViewabilityConfig, ViewToken } from "react-native";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-import { getAll } from "@/api/post";
+import { getAll as _getAll } from "@/api/post";
 
 import { Profile } from "@/types/models";
 
@@ -10,17 +10,10 @@ const usePostList = (profile?: Profile) => {
   const [activePostId, setActivePostId] = useState<number>();
   const [isRefetching, setIsRefetching] = useState(false);
 
-  const {
-    data,
-    isLoading,
-    refetch: handleRefetch,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
+  const getAll = useInfiniteQuery({
     queryKey: profile ? ["posts", "profile", profile.id] : ["posts"],
     queryFn: ({ pageParam }) =>
-      profile ? getAll({ pageParam }, profile.id) : getAll({ pageParam }),
+      profile ? _getAll({ pageParam }, profile.id) : _getAll({ pageParam }),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) =>
       lastPage.length < 10 ? undefined : allPages.length * 10,
@@ -30,28 +23,28 @@ const usePostList = (profile?: Profile) => {
     itemVisiblePercentThreshold: 51,
   };
 
-  const handleViewableItemsChanged = (callback: {
+  const handleViewableItemsChanged = ({
+    viewableItems,
+  }: {
     viewableItems: ViewToken[];
   }) => {
-    if (callback.viewableItems.length > 0) {
-      setActivePostId(callback.viewableItems[0].item.id);
+    if (viewableItems.length > 0) {
+      setActivePostId(viewableItems[0].item.id);
     }
   };
 
   const refetch = async () => {
     setIsRefetching(true);
-    await handleRefetch();
+    await getAll.refetch();
     setIsRefetching(false);
   };
 
   return {
-    data,
-    isLoading,
-    refetch,
-    isRefetching,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
+    getAll: {
+      ...getAll,
+      refetch,
+      isRefetching,
+    },
     metadata: {
       activePostId,
       viewabilityConfig,
