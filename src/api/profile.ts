@@ -2,12 +2,7 @@ import { supabase } from "@/lib/supabase";
 
 import { uploadFile } from "@/api/storage";
 
-import { Profile } from "@/types/models";
-import { File } from "@/types/common";
-
-type Update = Omit<Profile, "avatar" | "created_at"> & {
-  avatar: string | null | File;
-};
+import { ProfileForm } from "@/schemas/profile";
 
 export const get = async (profile_id: string) => {
   const { data } = await supabase
@@ -20,7 +15,7 @@ export const get = async (profile_id: string) => {
   return data;
 };
 
-export const update = async (payload: Update) => {
+export const update = async (payload: ProfileForm) => {
   if (payload.avatar !== null && typeof payload.avatar === "object") {
     const path = "avatars/" + payload.avatar.uri.split("/").pop();
     const fileUri = await uploadFile({
