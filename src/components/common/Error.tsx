@@ -1,5 +1,8 @@
 import { View } from "react-native";
 
+import ScreenWrapper from "@/components/common/ScreenWrapper";
+import ScreenHeader from "@/components/common/ScreenHeader";
+import BackButton from "@/components/common/BackButton";
 import Text from "@/components/ui/Text";
 
 type ErrorProps = {
@@ -8,8 +11,12 @@ type ErrorProps = {
 
 export default function Error({ text }: ErrorProps) {
   return (
-    <View className="flex-1 justify-center items-center">
-      <Text variant="error">{text}</Text>
-    </View>
+    <ScreenWrapper>
+      <ScreenHeader title="" leftIcon={<BackButton />} />
+
+      <View className="flex-1 justify-center items-center">
+        <Text>{text}</Text>
+      </View>
+    </ScreenWrapper>
   );
 }
