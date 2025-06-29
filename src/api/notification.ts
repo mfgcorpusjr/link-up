@@ -34,7 +34,6 @@ export const markAsRead = async (payload: MarkAsReadPayload) => {
     .update({ is_read: true })
     .match({ receiver_id: payload.receiver_id, post_id: payload.post_id })
     .select()
-    .single()
     .throwOnError();
 
   return data;

@@ -45,10 +45,12 @@ const useNotification = (profile?: Profile) => {
 
   const markAsRead = useMutation({
     mutationFn: _markAsRead,
-    onSuccess: ({ receiver_id }) => {
-      queryClient.invalidateQueries({
-        queryKey: ["notifications", receiver_id],
-      });
+    onSuccess: (data) => {
+      if (data.length > 0) {
+        queryClient.invalidateQueries({
+          queryKey: ["notifications", data[0].receiver_id],
+        });
+      }
     },
     onError: (error) => {
       Snackbar.show({

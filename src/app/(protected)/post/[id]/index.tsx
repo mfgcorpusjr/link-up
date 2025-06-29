@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { View, FlatList } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
@@ -9,16 +10,24 @@ import CommentItem from "@/components/CommentItem";
 import PostDetailsHeader from "@/components/PostDetailsHeader";
 
 import usePost from "@/hooks/usePost";
+import useNotification from "@/hooks/useNotification";
 
 import useAuthStore from "@/store/useAuthStore";
 
 export default function PostDetailsScreen() {
   const { id } = useLocalSearchParams();
   const profile = useAuthStore((state) => state.profile);
+  const { markAsRead } = useNotification();
 
   const {
     get: { isLoading, data, error },
   } = usePost(Number(id));
+
+  useEffect(() => {
+    if (profile && data) {
+      markAsRead.mutate({ receiver_id: profile.id, post_id: data.id });
+    }
+  }, [profile, data]);
 
   if (isLoading || !profile) {
     return <Loading />;
