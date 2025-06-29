@@ -2,9 +2,7 @@ import { supabase } from "@/lib/supabase";
 
 import { Notification } from "@/types/models";
 
-import { CreateLikeNotificationPayload } from "@/hooks/useLikeSubscription";
-import { CreateCommentNotificationPayload } from "@/hooks/useCommentSubscription";
-
+export type CreatePayload = Omit<Notification, "id" | "is_read" | "created_at">;
 export type MarkAsReadPayload = Pick<Notification, "receiver_id" | "post_id">;
 
 export const getAll = async ({ pageParam = 0 }, receiver_id: string) => {
@@ -19,9 +17,7 @@ export const getAll = async ({ pageParam = 0 }, receiver_id: string) => {
   return data;
 };
 
-export const create = async (
-  payload: CreateLikeNotificationPayload | CreateCommentNotificationPayload
-) => {
+export const create = async (payload: CreatePayload) => {
   const { data } = await supabase
     .from("notifications")
     .insert(payload)
@@ -32,14 +28,11 @@ export const create = async (
   return data;
 };
 
-export const markAsRead = async ({
-  receiver_id,
-  post_id,
-}: MarkAsReadPayload) => {
+export const markAsRead = async (payload: MarkAsReadPayload) => {
   const { data } = await supabase
     .from("notifications")
     .update({ is_read: true })
-    .match({ receiver_id, post_id })
+    .match({ receiver_id: payload.receiver_id, post_id: payload.post_id })
     .select()
     .single()
     .throwOnError();

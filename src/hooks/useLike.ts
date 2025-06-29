@@ -3,8 +3,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Snackbar from "react-native-snackbar";
 
 import { like, unlike } from "@/api/like";
+import { get as getPost } from "@/api/post";
 
 import useAuthStore from "@/store/useAuthStore";
+
+import useNotification from "@/hooks/useNotification";
 
 import { PostItem, Like } from "@/types/models";
 
@@ -15,6 +18,7 @@ const useLike = (post: PostItem) => {
   const [payload, setPayload] = useState<Payload>();
 
   const profile = useAuthStore((state) => state.profile);
+  const { create: createNotification } = useNotification();
 
   const queryClient = useQueryClient();
 
@@ -27,10 +31,24 @@ const useLike = (post: PostItem) => {
 
   const toggleLike = useMutation({
     mutationFn: () => (isLiked ? unlike(payload!) : like(payload!)),
-    onSuccess: ({ post_id }) => {
+    onSuccess: async (like) => {
+      if (!isLiked) {
+        const post = await getPost(like.post_id);
+        if (post.profile_id !== like.profile_id) {
+          createNotification.mutate({
+            sender_id: like.profile_id,
+            receiver_id: post.profile_id,
+            post_id: post.id,
+            comment_id: null,
+            like_id: like.id,
+            title: "liked your post",
+          });
+        }
+      }
+
       setIsLiked((v) => !v);
 
-      queryClient.invalidateQueries({ queryKey: ["posts", post_id] });
+      queryClient.invalidateQueries({ queryKey: ["posts", like.post_id] });
     },
     onError: (error) => {
       Snackbar.show({

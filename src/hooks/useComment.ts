@@ -6,8 +6,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Snackbar from "react-native-snackbar";
 
 import { create as _create, _delete } from "@/api/comment";
+import { get as getPost } from "@/api/post";
 
 import useAuthStore from "@/store/useAuthStore";
+
+import useNotification from "@/hooks/useNotification";
 
 import { Post } from "@/types/models";
 
@@ -18,16 +21,30 @@ const useComment = (post?: Post) => {
 
   const queryClient = useQueryClient();
 
+  const { create: createNotification } = useNotification();
+
   const createForm = useForm({
     resolver: zodResolver(commentFormSchema),
   });
 
   const create = useMutation({
     mutationFn: _create,
-    onSuccess: ({ post_id }) => {
+    onSuccess: async (comment) => {
+      const post = await getPost(comment.post_id);
+      if (post.profile_id !== comment.profile_id) {
+        createNotification.mutate({
+          sender_id: comment.profile_id,
+          receiver_id: post.profile_id,
+          post_id: post.id,
+          comment_id: comment.id,
+          like_id: null,
+          title: "commented on your post",
+        });
+      }
+
       createForm.resetField("text");
 
-      queryClient.invalidateQueries({ queryKey: ["posts", post_id] });
+      queryClient.invalidateQueries({ queryKey: ["posts", comment.post_id] });
     },
     onError: (error) => {
       Snackbar.show({
