@@ -16,19 +16,13 @@ import { PostItem as TPostItem } from "@/types/models";
 import { humanReadableDate } from "@/helpers/date";
 import { isImage } from "@/helpers/image";
 
+import shadow from "@/constants/shadow";
+
 type PostItemProps = {
   post: TPostItem;
   isViewable?: boolean;
   showMoreIcon?: boolean;
   showActionsIcon?: boolean;
-};
-
-const shadow = {
-  shadowColor: "#000",
-  shadowOffset: { width: 0, height: 1 },
-  shadowOpacity: 0.2,
-  shadowRadius: 1.41,
-  elevation: 2,
 };
 
 export default function PostItem({

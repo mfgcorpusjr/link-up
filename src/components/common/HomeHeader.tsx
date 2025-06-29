@@ -15,7 +15,9 @@ export default function HomeHeader() {
       <Text variant="title">LinkUp</Text>
 
       <View className="flex-row items-center ml-auto gap-5">
-        <Icon name="heart-outline" size={32} />
+        <Link href="/notifications" asChild>
+          <Icon name="heart-outline" size={32} />
+        </Link>
         <Link href="/post/create" asChild>
           <Icon name="add-circle-outline" size={32} />
         </Link>
