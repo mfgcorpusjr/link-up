@@ -16,7 +16,9 @@ import useAuthStore from "@/store/useAuthStore";
 
 export default function PostDetailsScreen() {
   const { id } = useLocalSearchParams();
+
   const profile = useAuthStore((state) => state.profile);
+
   const { markAsRead } = useNotification();
 
   const {
@@ -29,7 +31,7 @@ export default function PostDetailsScreen() {
     }
   }, [profile, data]);
 
-  if (isLoading || !profile) {
+  if (isLoading) {
     return <Loading />;
   }
 
@@ -45,11 +47,11 @@ export default function PostDetailsScreen() {
         renderItem={({ item }) => (
           <CommentItem
             comment={item}
-            showActionIcon={item.profile_id === profile.id}
+            showActionIcon={item.profile_id === profile!.id}
           />
         )}
         ListHeaderComponent={
-          <PostDetailsHeader post={data} profile={profile} />
+          <PostDetailsHeader post={data} profile={profile!} />
         }
         ItemSeparatorComponent={() => <View className="h-2" />}
         ListEmptyComponent={

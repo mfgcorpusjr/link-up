@@ -8,7 +8,7 @@ import BackButton from "@/components/common/BackButton";
 import PostForm from "@/components/PostForm";
 
 export default function EditPostScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id } = useLocalSearchParams();
 
   return (
     <ScreenWrapper className="pb-4">

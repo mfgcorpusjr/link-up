@@ -1,7 +1,6 @@
 import { FlatList, RefreshControl, ActivityIndicator } from "react-native";
 
 import ScreenWrapper from "@/components/common/ScreenWrapper";
-import Loading from "@/components/common/Loading";
 import ListEmpty from "@/components/common/ListEmpty";
 import PostItem from "@/components/PostItem";
 import ProfileHeader from "@/components/ProfileHeader";
@@ -16,10 +15,6 @@ export default function ProfileScreen() {
   const session = useAuthStore((state) => state.session);
   const profile = useAuthStore((state) => state.profile);
 
-  if (!session || !profile) {
-    return <Loading />;
-  }
-
   const {
     getAll: {
       data,
@@ -31,7 +26,7 @@ export default function ProfileScreen() {
       isFetchingNextPage,
     },
     metadata: { activePostId, viewabilityConfig, handleViewableItemsChanged },
-  } = usePostList(profile);
+  } = usePostList(profile!);
 
   return (
     <ScreenWrapper>
@@ -53,7 +48,7 @@ export default function ProfileScreen() {
           if (hasNextPage && !isFetchingNextPage) fetchNextPage();
         }}
         ListHeaderComponent={
-          <ProfileHeader session={session} profile={profile} />
+          <ProfileHeader session={session!} profile={profile!} />
         }
         ListFooterComponent={
           isFetchingNextPage ? (
