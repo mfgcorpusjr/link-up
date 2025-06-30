@@ -48,7 +48,7 @@ const useLike = (post: PostItem) => {
 
       setIsLiked((v) => !v);
 
-      queryClient.invalidateQueries({ queryKey: ["posts", like.post_id] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
     onError: (error) => {
       Snackbar.show({

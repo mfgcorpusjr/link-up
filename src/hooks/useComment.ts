@@ -44,7 +44,7 @@ const useComment = (post?: Post) => {
 
       createForm.resetField("text");
 
-      queryClient.invalidateQueries({ queryKey: ["posts", comment.post_id] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
     onError: (error) => {
       Snackbar.show({
@@ -56,13 +56,13 @@ const useComment = (post?: Post) => {
 
   const deleteComment = useMutation({
     mutationFn: _delete,
-    onSuccess: ({ post_id }) => {
+    onSuccess: () => {
       Snackbar.show({
         text: "Comment deleted",
         duration: Snackbar.LENGTH_SHORT,
       });
 
-      queryClient.invalidateQueries({ queryKey: ["posts", post_id] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
     onError: (error) => {
       Snackbar.show({
