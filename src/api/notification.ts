@@ -38,3 +38,14 @@ export const markAsRead = async (payload: MarkAsReadPayload) => {
 
   return data;
 };
+
+export const getUnreadCount = async (receiverId: string) => {
+  const { count } = await supabase
+    .from("notifications")
+    .select("*", { count: "exact", head: true })
+    .eq("receiver_id", receiverId)
+    .eq("is_read", false)
+    .throwOnError();
+
+  return count;
+};
