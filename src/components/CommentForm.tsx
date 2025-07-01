@@ -29,33 +29,35 @@ export default function CommentForm({ post }: CommentFormProps) {
   } = useComment(post);
 
   return (
-    <View className="flex-row gap-4">
-      <View className="flex-1">
-        <Controller
-          control={control}
-          render={({ field: { value, onChange, onBlur } }) => (
-            <TextInput
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Type comment"
-            />
-          )}
-          name="text"
-        />
+    <View className="-mb-1">
+      <View className="flex-row gap-4">
+        <View className="flex-1">
+          <Controller
+            control={control}
+            render={({ field: { value, onChange, onBlur } }) => (
+              <TextInput
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                placeholder="Type comment"
+              />
+            )}
+            name="text"
+          />
+        </View>
 
-        <Text className="p-1" variant="error">
-          {errors?.text?.message}
-        </Text>
+        <Button
+          containerClassName="w-14 self-center"
+          variant="outlined"
+          icon={<Icon name="send-outline" color={colors.tint} />}
+          isLoading={isPending}
+          onPress={handleSubmit((data: TCommentForm) => mutate(data))}
+        />
       </View>
 
-      <Button
-        containerClassName="w-14"
-        variant="outlined"
-        icon={<Icon name="send-outline" color={colors.tint} />}
-        isLoading={isPending}
-        onPress={handleSubmit((data: TCommentForm) => mutate(data))}
-      />
+      <Text className="p-1" variant="error">
+        {errors?.text?.message}
+      </Text>
     </View>
   );
 }
